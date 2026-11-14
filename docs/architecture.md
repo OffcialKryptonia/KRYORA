@@ -60,3 +60,6 @@ KRYORA uses the FrameXTV catalogue backend at `https://api.framextv.tech`. The i
 - `GET /api/details?id={id}&type={movie|tv}` for movie/series details
 - `GET /api/season?id={id}&season={number}` for episode lists
 These endpoints are integration leads rather than a published official catalogue API contract. Their live availability, CORS behavior, response stability and permission to reuse remain to be verified. Anime is displayed from catalogue rails/search; a dedicated detail/playback path is not enabled until verified.
+
+## Anime catalogue handling
+The third-party FrameXTV CloudStream integration documents Anime titles as AniList IDs and retrieves their metadata through the AniList GraphQL API. KRYORA therefore resolves anime detail cards through AniList GraphQL, while anime discovery/search entries originate from FrameXTV home/search responses. The published FrameXTV iframe documentation only defines movie and TV-series embed paths; KRYORA does not infer an anime playback URL.
