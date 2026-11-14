@@ -52,3 +52,11 @@ Secrets, databases, and provider credentials must be isolated by environment. No
 - IDs and episode numbers are validated before an iframe URL is built.
 - KRYORA embeds the provider player and does not proxy or extract media streams.
 - Playback availability and provider permissions remain subject to FrameXTV.
+
+## FrameXTV catalogue adapter
+KRYORA uses the FrameXTV catalogue backend at `https://api.framextv.tech`. The integration currently targets the endpoints documented by a third-party FrameXTV CloudStream provider project:
+- `GET /api/home` for homepage hero and catalogue rails
+- `GET /api/search?q={query}` for search
+- `GET /api/details?id={id}&type={movie|tv}` for movie/series details
+- `GET /api/season?id={id}&season={number}` for episode lists
+These endpoints are integration leads rather than a published official catalogue API contract. Their live availability, CORS behavior, response stability and permission to reuse remain to be verified. Anime is displayed from catalogue rails/search; a dedicated detail/playback path is not enabled until verified.
