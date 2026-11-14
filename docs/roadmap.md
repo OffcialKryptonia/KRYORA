@@ -10,7 +10,8 @@
 - [ ] Verify Cloudflare Workers deployment workflow
 
 ## Phase 2 — Catalogue and discovery
-- [ ] Select a metadata provider and confirm commercial-use requirements
+- [x] Implement a provisional FrameXTV catalogue adapter using the endpoint map documented by a third-party FrameXTV provider project
+- [ ] Verify official FrameXTV catalogue endpoint support, CORS, response stability and reuse permissions
 - [ ] Implement server-side provider adapter
 - [ ] Add discovery, trending, popular, and genre shelves using real provider data
 - [ ] Implement search, filters, pagination, and empty/error states
