@@ -26,7 +26,7 @@ Catalogue metadata and video playback are separate concerns:
 2. A playback adapter supplies a playable source only when the content is authorised and the provider contract permits embedding.
 3. User progress and watchlist services persist account-specific state.
 
-The UI must not assume that a metadata record is playable. The FrameXTV documentation and the supplied .cc documentation / .xyz embed-host details require verification before an adapter is implemented.
+The UI must not assume that a metadata record is playable. The documented FrameXTV playback integration uses `https://framextv.xyz/embed/{tmdb_id}` for movies and `https://framextv.xyz/embed/{tmdb_id}/{season}/{episode}` for series. KRYORA constructs these URLs from validated IDs and embeds the provider player. The published documentation does not describe a public catalogue-search API; catalogue discovery must not be represented as an API capability until FrameXTV documents or confirms one.
 
 ## Security requirements
 - Provider credentials and signing secrets stay server-side.
@@ -43,3 +43,12 @@ The UI must not assume that a metadata record is playable. The FrameXTV document
 - Production
 
 Secrets, databases, and provider credentials must be isolated by environment. No production DNS changes or resource provisioning should happen until a deployment has been built and verified.
+
+## FrameXTV playback integration
+- Player origin: `https://framextv.xyz`.
+- Movie URL: `/embed/{tmdb_id}`.
+- Series URL: `/embed/{tmdb_id}/{season}/{episode}`.
+- KRYORA playback routes accept `?watch=movie&id={tmdb_id}` or `?watch=series&id={tmdb_id}&season={season}&episode={episode}`.
+- IDs and episode numbers are validated before an iframe URL is built.
+- KRYORA embeds the provider player and does not proxy or extract media streams.
+- Playback availability and provider permissions remain subject to FrameXTV.
