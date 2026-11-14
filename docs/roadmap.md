@@ -17,8 +17,9 @@
 - [ ] Add movie, series, season, and episode detail views
 
 ## Phase 3 — Playback
-- [ ] Verify the playback provider's current API, terms, and supported embed origins
-- [ ] Implement a server-controlled playback resolver
+- [x] Implement the documented FrameXTV iframe URL patterns for movie and series playback
+- [ ] Verify playback provider terms, content permissions, and supported embed origins
+- [ ] Add a server-controlled playback resolver only if FrameXTV later requires signed or protected URLs
 - [ ] Add secure player embedding and origin-validated messaging
 - [ ] Add episode navigation and viewing progress
 - [ ] Test with authorised content before enabling watch actions
