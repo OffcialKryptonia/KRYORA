@@ -63,3 +63,7 @@ These endpoints are integration leads rather than a published official catalogue
 
 ## Anime catalogue handling
 The third-party FrameXTV CloudStream integration documents Anime titles as AniList IDs and retrieves their metadata through the AniList GraphQL API. KRYORA therefore resolves anime detail cards through AniList GraphQL, while anime discovery/search entries originate from FrameXTV home/search responses. The published FrameXTV iframe documentation only defines movie and TV-series embed paths; KRYORA does not infer an anime playback URL.
+
+
+## FrameXTV catalogue proxy
+The browser calls the same-origin `/api/framextv/*` routes. A Cloudflare Pages Function forwards only the allowlisted read-only `home`, `search`, `details`, and `season` requests to `https://api.framextv.tech`. This avoids requiring the browser to make cross-origin API calls directly and prevents the proxy from becoming an unrestricted URL forwarder. The upstream remains a third-party service; availability, access policy, and schema stability are not guaranteed by KRYORA.
