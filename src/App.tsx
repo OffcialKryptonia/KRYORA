@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import {
-  ArrowLeft, ArrowRight, Bell, Bookmark, ChevronDown, Clapperboard, Compass,
+  ArrowRight, Bell, Bookmark, ChevronDown, Clapperboard, Compass,
   Film, Menu, Play, Search, Sparkles, Tv, X, Star, CalendarDays, Clock,
 } from "lucide-react";
 import { FrameXTVPlayer } from "./components/FrameXTVPlayer";
@@ -9,7 +9,7 @@ import {
   getFrameXTVHome, searchFrameXTV, getFrameXTVDetails, getFrameXTVSeason,
   type FrameXTVHome, type FrameXTVDetails, type FrameXTVEpisode,
 } from "./lib/framextv-catalogue";
-import type { CatalogueTitle, MediaKind } from "./lib/catalogue/types";
+import type { CatalogueTitle } from "./lib/catalogue/types";
 
 type NavItem = "Home" | "Movies" | "Series" | "Anime";
 const navItems: NavItem[] = ["Home", "Movies", "Series", "Anime"];
