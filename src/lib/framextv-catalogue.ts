@@ -32,6 +32,7 @@ export interface FrameXTVDetails extends CatalogueTitle {
   voteCount?: number;
   status?: string;
   tagline?: string;
+  episodeCount?: number;
   seasons: FrameXTVSeason[];
   recommendations: CatalogueTitle[];
 }
@@ -84,6 +85,42 @@ async function getJson<T>(path: string): Promise<T> {
   if (!response.ok) throw new Error(`FrameXTV returned HTTP ${response.status}`);
   return response.json() as Promise<T>;
 }
+
+async function getAniListDetails(id: string): Promise<FrameXTVDetails> {
+  const query = `query ($id: Int) {
+    Media(id: $id, type: ANIME, isAdult: false) {
+      id title { english romaji native } coverImage { extraLarge large }
+      bannerImage description episodes genres averageScore seasonYear
+    }
+  }`;
+  const response = await fetch("https://graphql.anilist.co", {
+    method: "POST",
+    headers: { Accept: "application/json", "Content-Type": "application/json" },
+    body: JSON.stringify({ query, variables: { id: Number(id) } }),
+  });
+  if (!response.ok) throw new Error(`AniList returned HTTP ${response.status}`);
+  const payload = await response.json() as { data?: { Media?: {
+    id?: number; title?: { english?: string; romaji?: string; native?: string };
+    coverImage?: { extraLarge?: string; large?: string }; bannerImage?: string;
+    description?: string; episodes?: number; genres?: string[];
+    averageScore?: number; seasonYear?: number;
+  } } };
+  const media = payload.data?.Media;
+  if (!media?.id) throw new Error("AniList did not return this anime.");
+  const title = media.title?.english || media.title?.romaji || media.title?.native || `Anime ${id}`;
+  const synopsis = media.description?.replace(/<[^>]*>/g, " ").replace(/\\s+/g, " ").trim();
+  return {
+    id: `framextv:anime:${media.id}`, provider: "framextv", providerId: String(media.id),
+    kind: "anime", title, synopsis, year: media.seasonYear,
+    posterUrl: media.coverImage?.extraLarge || media.coverImage?.large,
+    backdropUrl: media.bannerImage,
+    averageRating: media.averageScore == null ? undefined : media.averageScore / 10,
+    episodeCount: media.episodes,
+    genres: (media.genres ?? []).map((name, index) => ({ id: `${index}-${name}`, name })),
+    seasons: [], recommendations: [],
+  };
+}
+
 export async function getFrameXTVHome(): Promise<FrameXTVHome> {
   const data = await getJson<RawHome>("/api/home");
   const rails = Object.entries(data.rails ?? {}).map(([key, rail]) => ({
@@ -98,6 +135,7 @@ export async function searchFrameXTV(query: string): Promise<CatalogueTitle[]> {
   return (data.results ?? []).map(mapTitle).filter((item): item is CatalogueTitle => item !== null);
 }
 export async function getFrameXTVDetails(id: string, kind: MediaKind): Promise<FrameXTVDetails> {
+  if (kind === "anime") return getAniListDetails(id);
   const type = kind === "series" ? "tv" : kind;
   const raw = await getJson<RawDetails>(`/api/details?id=${encodeURIComponent(id)}&type=${encodeURIComponent(type)}`);
   const title = mapTitle({ ...raw, id: raw.id ?? id, type });
@@ -108,6 +146,7 @@ export async function getFrameXTVDetails(id: string, kind: MediaKind): Promise<F
     voteCount: raw.voteCount,
     status: raw.status,
     tagline: raw.tagline,
+    episodeCount: raw.numberOfEpisodes,
     seasons: raw.seasons ?? [],
     recommendations: (raw.recommendations ?? []).map(mapTitle).filter((item): item is CatalogueTitle => item !== null),
   };
