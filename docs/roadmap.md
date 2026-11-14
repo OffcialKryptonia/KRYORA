@@ -1,0 +1,47 @@
+# KRYORA delivery roadmap
+
+## Phase 1 — Foundation
+- [x] Establish project repository and product README
+- [x] Add React + TypeScript + Vite application shell
+- [x] Establish responsive visual foundation
+- [x] Define provider-neutral catalogue types
+- [x] Document platform architecture and security boundaries
+- [ ] Run dependency installation, type-check, and production build in CI
+- [ ] Verify Cloudflare Workers deployment workflow
+
+## Phase 2 — Catalogue and discovery
+- [ ] Select a metadata provider and confirm commercial-use requirements
+- [ ] Implement server-side provider adapter
+- [ ] Add discovery, trending, popular, and genre shelves using real provider data
+- [ ] Implement search, filters, pagination, and empty/error states
+- [ ] Add movie, series, season, and episode detail views
+
+## Phase 3 — Playback
+- [ ] Verify the playback provider's current API, terms, and supported embed origins
+- [ ] Implement a server-controlled playback resolver
+- [ ] Add secure player embedding and origin-validated messaging
+- [ ] Add episode navigation and viewing progress
+- [ ] Test with authorised content before enabling watch actions
+
+## Phase 4 — Accounts
+- [ ] Implement secure authentication and sessions
+- [ ] Add profile management
+- [ ] Add watchlists and viewing history
+- [ ] Persist playback progress
+
+## Phase 5 — Administration
+- [ ] Add server-protected /admin
+- [ ] Add user and content administration
+- [ ] Add curated homepage collections and genre management
+- [ ] Add provider settings without exposing secrets
+- [ ] Add branding, maintenance, and analytics settings
+
+## Phase 6 — Production readiness
+- [ ] Accessibility and responsive QA across supported screen sizes
+- [ ] Security review and abuse protection
+- [ ] Performance and caching review
+- [ ] Automated tests and deployment checks
+- [ ] Production deployment and custom domain after verification
+
+## Release rule
+A phase is not complete because its UI exists. Mark it complete only after the relevant behavior has been implemented and verified.
