@@ -128,7 +128,7 @@ async function getAniListDetails(id: string): Promise<FrameXTVDetails> {
 }
 
 export async function getFrameXTVHome(): Promise<FrameXTVHome> {
-  const data = await getJson<RawHome>("/api/home");
+  const data = await getJson<RawHome>("/home");
   const rails = Object.entries(data.rails ?? {}).map(([key, rail]) => ({
     key,
     title: rail.title || key.replaceAll("_", " ").replace(/\b\w/g, (c) => c.toUpperCase()),
@@ -137,13 +137,13 @@ export async function getFrameXTVHome(): Promise<FrameXTVHome> {
   return { hero: data.hero ? mapTitle(data.hero) : null, rails };
 }
 export async function searchFrameXTV(query: string): Promise<CatalogueTitle[]> {
-  const data = await getJson<{ results?: RawMedia[] }>(`/api/search?q=${encodeURIComponent(query)}`);
+  const data = await getJson<{ results?: RawMedia[] }>(`/search?q=${encodeURIComponent(query)}`);
   return (data.results ?? []).map(mapTitle).filter((item): item is CatalogueTitle => item !== null);
 }
 export async function getFrameXTVDetails(id: string, kind: MediaKind): Promise<FrameXTVDetails> {
   if (kind === "anime") return getAniListDetails(id);
   const type = kind === "series" ? "tv" : kind;
-  const raw = await getJson<RawDetails>(`/api/details?id=${encodeURIComponent(id)}&type=${encodeURIComponent(type)}`);
+  const raw = await getJson<RawDetails>(`/details?id=${encodeURIComponent(id)}&type=${encodeURIComponent(type)}`);
   const title = mapTitle({ ...raw, id: raw.id ?? id, type });
   if (!title) throw new Error("FrameXTV returned incomplete title details.");
   return {
@@ -158,6 +158,6 @@ export async function getFrameXTVDetails(id: string, kind: MediaKind): Promise<F
   };
 }
 export async function getFrameXTVSeason(id: string, season: number): Promise<FrameXTVEpisode[]> {
-  const data = await getJson<RawEpisodes>(`/api/season?id=${encodeURIComponent(id)}&season=${season}`);
+  const data = await getJson<RawEpisodes>(`/season?id=${encodeURIComponent(id)}&season=${season}`);
   return data.episodes ?? [];
 }
