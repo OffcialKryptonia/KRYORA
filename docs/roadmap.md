@@ -15,7 +15,8 @@
 - [ ] Implement server-side provider adapter
 - [ ] Add discovery, trending, popular, and genre shelves using real provider data
 - [ ] Implement search, filters, pagination, and empty/error states
-- [ ] Add movie, series, season, and episode detail views
+- [x] Add movie, series, season, and episode detail views
+- [x] Resolve anime detail metadata using the AniList GraphQL lookup described by the FrameXTV integration project
 
 ## Phase 3 — Playback
 - [x] Implement the documented FrameXTV iframe URL patterns for movie and series playback
