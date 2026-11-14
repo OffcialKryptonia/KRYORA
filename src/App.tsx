@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { FrameXTVPlayer } from "./components/FrameXTVPlayer";
+import type { FrameXTVPlaybackRequest } from "./lib/framextv";
 import {
   ArrowRight,
   Bell,
@@ -19,10 +21,46 @@ type NavItem = "Home" | "Movies" | "Series" | "Anime";
 
 const navItems: NavItem[] = ["Home", "Movies", "Series", "Anime"];
 
+function getPlaybackRequest(): FrameXTVPlaybackRequest | null {
+  const params = new URLSearchParams(window.location.search);
+  const media = params.get("watch");
+  const tmdbId = params.get("id") ?? "";
+  if ((media !== "movie" && media !== "series") || !/^\d+$/.test(tmdbId)) return null;
+  if (media === "movie") return { media, tmdbId };
+  const season = Number(params.get("season"));
+  const episode = Number(params.get("episode"));
+  if (!Number.isInteger(season) || !Number.isInteger(episode) || season < 1 || episode < 1) return null;
+  return { media, tmdbId, season, episode };
+}
+
+function WatchPage({ request }: { request: FrameXTVPlaybackRequest }) {
+  const description = request.media === "movie"
+    ? "Movie playback"
+    : `Season ${request.season} · Episode ${request.episode}`;
+  return (
+    <main className="watch-page">
+      <header className="watch-header">
+        <a className="brand" href="/" aria-label="KRYORA home"><span className="brand-mark">K</span><span className="brand-word">KRYORA</span></a>
+        <span className="watch-provider">POWERED BY FRAMEX TV</span>
+      </header>
+      <div className="watch-content">
+        <a className="watch-back" href="/">← Back to KRYORA</a>
+        <div className="watch-heading"><div><p className="section-overline">NOW PLAYING</p><h1>Continue your story</h1><p>${description} · TMDB ID ${request.tmdbId}</p></div></div>
+        <FrameXTVPlayer request={request} />
+        <p className="watch-disclaimer">Playback is provided by FrameXTV. Availability depends on the external player and its supported content.</p>
+      </div>
+      <footer className="watch-footer">KRYORA · A PRODUCT OF KRYPTONIA</footer>
+    </main>
+  );
+}
+
 function App() {
   const [activeNav, setActiveNav] = useState<NavItem>("Home");
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const playbackRequest = getPlaybackRequest();
+
+  if (playbackRequest) return <WatchPage request={playbackRequest} />;
 
   return (
     <main className="app-shell">
