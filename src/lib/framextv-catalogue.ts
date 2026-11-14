@@ -1,6 +1,6 @@
 import type { CatalogueTitle, MediaKind } from "./catalogue/types";
 
-const API_BASE = "https://api.framextv.tech";
+const API_BASE = "/api/framextv";
 const DEFAULT_HEADERS: HeadersInit = { Accept: "application/json" };
 
 export interface FrameXTVRail {
@@ -82,8 +82,14 @@ function mapTitle(raw: RawMedia): CatalogueTitle | null {
 }
 async function getJson<T>(path: string): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`, { headers: DEFAULT_HEADERS });
-  if (!response.ok) throw new Error(`FrameXTV returned HTTP ${response.status}`);
-  return response.json() as Promise<T>;
+  const payload = await response.json().catch(() => null) as { error?: string } | T | null;
+  if (!response.ok) {
+    const message = payload && typeof payload === "object" && "error" in payload && typeof payload.error === "string"
+      ? payload.error : `Catalogue request failed (HTTP ${response.status}).`;
+    throw new Error(message);
+  }
+  if (payload === null) throw new Error("FrameXTV returned an empty response.");
+  return payload as T;
 }
 
 async function getAniListDetails(id: string): Promise<FrameXTVDetails> {
