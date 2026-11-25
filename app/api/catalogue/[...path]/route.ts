@@ -60,6 +60,12 @@ export async function GET(request:Request,context:{params:Promise<{path:string[]
    try{const anime=await anilist(animeQuery,{page:1,perPage:12,search:q});results.push(...(anime.Page?.media||[]).map(mapAnime));}catch{}
    return NextResponse.json({results},{headers:{"Cache-Control":"public, s-maxage=120, stale-while-revalidate=300"}});
   }
+  if(endpoint==="season"){
+   const id=url.searchParams.get("id")||"", season=url.searchParams.get("season")||"";
+   if(!/^\\d+$/.test(id)||!/^\\d+$/.test(season))return NextResponse.json({error:"Invalid season identifier."},{status:400});
+   const data=await tmdb("/tv/"+id+"/season/"+season);
+   return NextResponse.json({episodes:(data.episodes||[]).map((ep:any)=>({id:String(ep.id),number:ep.episode_number,name:ep.name,still:image(ep.still_path,"w500"),airDate:ep.air_date,rating:ep.vote_average,overview:ep.overview}))});
+  }
   if(endpoint==="details"){
    const kind=(url.searchParams.get("kind")||"movie") as MediaKind; const id=url.searchParams.get("id")||"";
    if(!/^\d+$/.test(id)||!["movie","series","anime"].includes(kind))return NextResponse.json({error:"Invalid title identifier."},{status:400});
