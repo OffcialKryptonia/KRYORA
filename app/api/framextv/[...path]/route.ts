@@ -20,8 +20,8 @@ export async function GET(request: Request, context: { params: Promise<{ path: s
   const id = upstream.searchParams.get("id");
   const season = upstream.searchParams.get("season");
   if ((endpoint === "search" && !upstream.searchParams.get("q")?.trim()) ||
-      (endpoint === "details" && (!id || !/^\\d+$/.test(id) || !["movie", "tv"].includes(upstream.searchParams.get("type") ?? ""))) ||
-      (endpoint === "season" && (!id || !/^\\d+$/.test(id) || !season || !/^\\d+$/.test(season)))) {
+      (endpoint === "details" && (!id || !/^\d+$/.test(id) || !["movie", "tv"].includes(upstream.searchParams.get("type") ?? ""))) ||
+      (endpoint === "season" && (!id || !/^\d+$/.test(id) || !season || !/^\d+$/.test(season)))) {
     return NextResponse.json({ error: "Required or valid FrameXTV query parameters are missing." }, { status: 400 });
   }
   try {
