@@ -2,7 +2,7 @@ name: KRYORA CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, feat/nextjs-vercel-migration]
   pull_request:
     branches: [main]
 
