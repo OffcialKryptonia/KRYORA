@@ -195,3 +195,27 @@ h1, h2, p { margin-top: 0; }
 .anime-note { padding:12px; border-radius:8px; background:rgba(139,112,255,.08); color:#B8A0A2; font-size:10px; line-height:1.6; }
 @media(max-width:1050px) { .poster-grid { grid-template-columns:repeat(4,minmax(0,1fr)); } .catalogue-rail,.search-results-section { padding-left:5%; padding-right:5%; } }
 @media(max-width:700px) { .poster-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px 10px; } .catalogue-rail,.search-results-section { padding:32px 5% 8px; } .catalogue-status,.catalogue-error,.empty-state { margin:22px 5%; } .detail-backdrop { padding:8px; }.detail-modal { max-height:94vh; }.detail-body { padding:22px 17px; }.detail-backdrop-image { height:150px; }.detail-body h2 { font-size:24px; }.episode-thumb { width:82px; height:50px; } }
+
+/* KRYORA account/auth screens */
+.profile-button { display:inline-flex; text-decoration:none; align-items:center; justify-content:center; }
+.kryora-auth { min-height:100vh; background:#090909; color:#fff; padding:30px 20px 24px; display:flex; flex-direction:column; align-items:center; font-family:Inter,'DM Sans',sans-serif; }
+.auth-brand { display:flex; align-items:center; gap:10px; color:#fff; text-decoration:none; font:700 20px 'Space Grotesk',sans-serif; letter-spacing:2px; margin:12px auto 42px; }
+.auth-mark { width:36px;height:36px;border-radius:10px;background:#c62835;display:grid;place-items:center;font-size:22px;font-weight:800; }
+.auth-card { width:min(100%,440px); border:1px solid #292929; border-radius:18px; background:#111; padding:clamp(22px,5vw,38px); box-shadow:0 24px 80px #0006; }
+.auth-eyebrow { color:#e34850;font-size:11px;font-weight:700;letter-spacing:2px; }
+.auth-card h1 { font:700 clamp(28px,5vw,36px) 'Space Grotesk',sans-serif; margin:10px 0; }
+.auth-sub { color:#aaa; line-height:1.6; margin:0 0 24px; }
+.auth-form { display:grid; gap:16px; margin-top:22px; }
+.auth-form label { display:grid; gap:8px; font-size:13px; color:#ddd; }
+.auth-form input,.auth-form textarea { width:100%; color:#fff; background:#191919; border:1px solid #333; border-radius:10px; padding:13px 14px; outline:none; font:inherit; }
+.auth-form input:focus,.auth-form textarea:focus { border-color:#c62835; box-shadow:0 0 0 2px #c6283525; }
+.auth-submit { border:0;border-radius:10px;background:#c62835;color:white;padding:14px;font-weight:700;cursor:pointer;margin-top:4px; }
+.auth-submit:disabled { opacity:.5;cursor:not-allowed; }
+.auth-forgot,.auth-logout { background:none;border:0;color:#ddd;text-decoration:underline;cursor:pointer;padding:12px 0; }
+.auth-switch { color:#aaa;font-size:14px;margin-top:22px; }
+.auth-switch button { border:0;background:none;color:#e34850;font-weight:700;cursor:pointer; }
+.auth-back { display:block;color:#aaa;text-decoration:none;margin-top:22px;font-size:13px; }
+.auth-message { border:1px solid #493235;background:#201719;border-radius:10px;color:#ddd;padding:12px;margin-top:16px;line-height:1.5;font-size:13px;overflow-wrap:anywhere; }
+.auth-message code { color:#ff9da3; }
+.auth-footer { margin-top:auto;padding-top:36px;color:#777;font-size:10px;letter-spacing:2px; }
+.account-card { margin-bottom:30px; }
