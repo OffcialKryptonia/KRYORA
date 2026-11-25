@@ -1,69 +1,19 @@
 # KRYORA architecture
 
-## Product boundary
-KRYORA is an independent entertainment discovery and streaming product from Kryptonia. It is not affiliated with any film studio, streaming service, comic-book publisher, or entertainment franchise.
-
-## Initial application stack
-- React 19 + TypeScript
-- Vite for the browser application and production asset build
-- Cloudflare Workers with Workers Static Assets as the intended hosting/runtime platform
-- GitHub as the source of truth
-
-The first commit establishes the frontend shell. Cloudflare deployment configuration is intentionally deferred until the current CLI and build workflow are verified against the connected account.
-
-## Planned Cloudflare services
-- Workers + Static Assets: application delivery and API entry point
-- D1: relational application data such as profiles, watchlists, and viewing progress
-- R2: user-uploaded artwork or other owned assets where required
-- Stream or a separately verified playback provider: authorised video delivery
-- Workers Logs and Traces: production observability
-
-These are architectural candidates, not provisioned resources. Enable only what the implementation needs and verify account plan limits and pricing before provisioning.
+## Application platform
+- Next.js App Router, React 19, and TypeScript.
+- Vercel-compatible server route handlers and deployments.
+- GitHub is the source of truth; migration is developed away from `main`.
+- Existing discovery UI and provider adapter are retained during the framework migration.
 
 ## Provider boundaries
-Catalogue metadata and video playback are separate concerns:
-1. A catalogue adapter supplies searchable metadata, artwork references, genres, credits, seasons, and episodes.
-2. A playback adapter supplies a playable source only when the content is authorised and the provider contract permits embedding.
-3. User progress and watchlist services persist account-specific state.
-
-The UI must not assume that a metadata record is playable. The documented FrameXTV playback integration uses `https://framextv.xyz/embed/{tmdb_id}` for movies and `https://framextv.xyz/embed/{tmdb_id}/{season}/{episode}` for series. KRYORA constructs these URLs from validated IDs and embeds the provider player. The published documentation does not describe a public catalogue-search API; catalogue discovery must not be represented as an API capability until FrameXTV documents or confirms one.
-
-## Security requirements
-- Provider credentials and signing secrets stay server-side.
-- Validate playback URLs against explicit provider host allowlists.
-- Validate postMessage sender origins and message schemas.
-- Never expose administrative or provider credentials in client bundles.
-- Protect administrative routes and enforce authorization on the server, not only in the UI.
-- Do not scrape or proxy unauthorised streams.
-- Do not publish fabricated catalogue records, playback links, ratings, or provider capabilities.
-
-## Environments
-- Local development
-- Preview / staging
-- Production
-
-Secrets, databases, and provider credentials must be isolated by environment. No production DNS changes or resource provisioning should happen until a deployment has been built and verified.
-
-## FrameXTV playback integration
-- Player origin: `https://framextv.xyz`.
-- Movie URL: `/embed/{tmdb_id}`.
-- Series URL: `/embed/{tmdb_id}/{season}/{episode}`.
-- KRYORA playback routes accept `?watch=movie&id={tmdb_id}` or `?watch=series&id={tmdb_id}&season={season}&episode={episode}`.
-- IDs and episode numbers are validated before an iframe URL is built.
-- KRYORA embeds the provider player and does not proxy or extract media streams.
-- Playback availability and provider permissions remain subject to FrameXTV.
+Catalogue metadata and video playback are separate concerns. The catalogue adapter supplies metadata and artwork; a playback adapter may provide a playable source only when content is authorized and provider terms permit embedding. A metadata record is never proof that content is playable.
 
 ## FrameXTV catalogue adapter
-KRYORA uses the FrameXTV catalogue backend at `https://api.framextv.tech`. The integration currently targets the endpoints documented by a third-party FrameXTV CloudStream provider project:
-- `GET /api/home` for homepage hero and catalogue rails
-- `GET /api/search?q={query}` for search
-- `GET /api/details?id={id}&type={movie|tv}` for movie/series details
-- `GET /api/season?id={id}&season={number}` for episode lists
-These endpoints are integration leads rather than a published official catalogue API contract. Their live availability, CORS behavior, response stability and permission to reuse remain to be verified. Anime is displayed from catalogue rails/search; a dedicated detail/playback path is not enabled until verified.
+The existing integration targets `https://api.framextv.tech` endpoints `/api/home`, `/api/search`, `/api/details`, and `/api/season`. These are integration leads based on a third-party provider project, not a verified official API contract. Live availability, response stability, reuse permission, and regional compatibility remain unverified. The Next.js route handler allows only read-only endpoints and their required query parameters.
 
-## Anime catalogue handling
-The third-party FrameXTV CloudStream integration documents Anime titles as AniList IDs and retrieves their metadata through the AniList GraphQL API. KRYORA therefore resolves anime detail cards through AniList GraphQL, while anime discovery/search entries originate from FrameXTV home/search responses. The published FrameXTV iframe documentation only defines movie and TV-series embed paths; KRYORA does not infer an anime playback URL.
+## Playback and security
+The existing player constructs embed URLs on `https://framextv.xyz` using numeric TMDB IDs. This remains provisional until rights, provider terms, and content availability are confirmed. Do not proxy or extract media streams. Keep credentials server-side, validate route parameters, and enforce authorization on the server.
 
-
-## FrameXTV catalogue proxy
-The browser calls the same-origin `/api/framextv/*` routes. A Cloudflare Pages Function forwards only the allowlisted read-only `home`, `search`, `details`, and `season` requests to `https://api.framextv.tech`. This avoids requiring the browser to make cross-origin API calls directly and prevents the proxy from becoming an unrestricted URL forwarder. The upstream remains a third-party service; availability, access policy, and schema stability are not guaranteed by KRYORA.
+## Planned backend
+Supabase Auth and PostgreSQL are candidates for authentication, profiles, watchlists, and viewing progress. No Supabase project or credentials are assumed to exist.
