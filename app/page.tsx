@@ -1,2 +1,2 @@
-import App from "../src/App";
-export default function HomePage() { return <App />; }
+import ClientHome from "./client-home";
+export default function HomePage() { return <ClientHome />; }
