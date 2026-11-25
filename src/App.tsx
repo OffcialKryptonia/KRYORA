@@ -54,6 +54,7 @@ function App() {
   const [home, setHome] = useState<FrameXTVHome | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [providerWarning, setProviderWarning] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState<CatalogueTitle[] | null>(null);
@@ -69,7 +70,7 @@ function App() {
   const [watchRequest, setWatchRequest] = useState<FrameXTVPlaybackRequest | null>(playbackFromUrl);
 
   useEffect(() => {
-    getFrameXTVHome().then((data) => { setHome(data); if (data.providerStatus?.message) setError(data.providerStatus.message); }).catch((e: unknown) => setError(e instanceof Error ? e.message : "Unable to load the catalogue.")).finally(() => setLoading(false));
+    getFrameXTVHome().then((data) => { setHome(data); if (data.providerStatus?.message) setProviderWarning(data.providerStatus.message); }).catch((e: unknown) => setError(e instanceof Error ? e.message : "Unable to load the catalogue.")).finally(() => setLoading(false));
   }, []);
   useEffect(() => {
     if (!query.trim()) { setSearchResults(null); return; }
@@ -133,7 +134,8 @@ function App() {
     </section>
     <section className="welcome-strip"><div className="welcome-icon"><Clapperboard size={18}/></div><div><p className="welcome-title">The next chapter starts here.</p><p className="welcome-subtitle">Discover movies and series with TMDB, alongside anime from AniList.</p></div><span className="welcome-tag">KRYORA ORIGINAL EXPERIENCE</span></section>
     {loading && <div className="catalogue-status"><span className="loading-spinner"/> Connecting to KRYORA catalogue…</div>}
-    {error && <div className="catalogue-error"><strong>Catalogue connection unavailable</strong><p>{error}</p><button className="secondary-button" onClick={() => {setLoading(true);setError("");getFrameXTVHome().then((data)=>{setHome(data);if(data.providerStatus?.message)setError(data.providerStatus.message);}).catch((e: unknown)=>setError(e instanceof Error?e.message:"Catalogue request failed.")).finally(()=>setLoading(false));}} type="button">Try again</button></div>}
+    {providerWarning && <div className="catalogue-error"><strong>Movie and series catalogue setup required</strong><p>{providerWarning}</p></div>}
+    {error && <div className="catalogue-error"><strong>Catalogue connection unavailable</strong><p>{error}</p><button className="secondary-button" onClick={() => {setLoading(true);setError("");getFrameXTVHome().then((data)=>{setHome(data);if(data.providerStatus?.message)setProviderWarning(data.providerStatus.message);}).catch((e: unknown)=>setError(e instanceof Error?e.message:"Catalogue request failed.")).finally(()=>setLoading(false));}} type="button">Try again</button></div>}
     {!loading && !error && visibleRails.map((rail) => <section className="catalogue-rail" key={rail.key}><div className="section-heading"><div><p className="section-overline">DISCOVER ON KRYORA</p><h2>{rail.title}</h2></div><span className="rail-count">{rail.items.length} titles</span></div><div className="poster-grid">{rail.items.map((item) => <PosterCard key={item.id} item={item} onOpen={openTitle}/>)}</div></section>)}
     {!loading && !error && visibleRails.length === 0 && <div className="empty-state">No catalogue sections are available for this category yet.</div>}
     <section className="discovery-section"><div className="section-heading"><div><p className="section-overline">BROWSE BY FORMAT</p><h2>Explore your universe</h2></div></div><div className="category-grid">
