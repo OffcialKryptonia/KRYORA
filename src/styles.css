@@ -334,3 +334,37 @@ h1, h2, p { margin-top: 0; }
 .account-main-footer{padding:30px 0 25px;color:#666;font-size:9px;letter-spacing:1.7px}
 @media(max-width:850px){.account-layout{grid-template-columns:1fr;margin-top:20px}.account-sidebar{position:static;min-height:0;padding:13px}.account-sidebar-heading{padding-bottom:10px}.account-mini-profile{padding:8px 8px 13px}.account-nav{display:flex;overflow-x:auto;padding:12px 0 2px;gap:5px}.account-nav button,.account-nav a{width:auto;min-width:max-content;min-height:39px;padding:0 11px}.account-nav-count{display:none}.account-signout{margin-top:8px;padding:11px 8px}.account-topbar{height:65px;padding:0 4%}.account-layout{width:92%}}
 @media(max-width:560px){.account-page-heading{align-items:flex-start}.account-status{font-size:8px}.account-welcome-panel{min-height:190px}.account-welcome-avatar{width:70px;height:70px;flex-basis:70px;font-size:28px}.account-stat-grid{gap:9px}.account-stat-card{padding:14px}.account-preference-grid{grid-template-columns:1fr}.account-back{font-size:11px}}
+
+
+/* KRYORA personalized discovery */
+.for-you-page{min-height:100vh;background:#090909;color:#f7f7f7}
+.for-you-top{height:72px;padding:0 6%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #292929;background:#0d0d0d}
+.for-you-brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:800;letter-spacing:2px}
+.for-you-brand span{width:34px;height:34px;border-radius:9px;background:#c62835;display:grid;place-items:center;font-size:20px}
+.for-you-account,.for-you-back{display:inline-flex;align-items:center;gap:8px;color:#aaa;text-decoration:none;font-size:12px}
+.for-you-content{width:min(1200px,90%);margin:38px auto 60px}
+.for-you-back:hover,.for-you-account:hover{color:#fff}
+.for-you-heading{display:flex;justify-content:space-between;align-items:center;margin:34px 0 30px;padding:30px;background:radial-gradient(ellipse at 90% 20%,#40191e 0,transparent 45%),#131313;border:1px solid #2b2b2b;border-radius:16px}
+.for-you-heading h1{margin:8px 0;font-size:clamp(34px,5vw,52px);letter-spacing:-1.5px}
+.for-you-heading p:last-child{margin:0;color:#aaa;font-size:13px}
+.for-you-icon{width:58px;height:58px;display:grid;place-items:center;border-radius:15px;background:#321619;color:#f08089}
+.for-you-result-heading{display:flex;justify-content:space-between;align-items:center;margin:28px 0 17px}
+.for-you-result-heading h2{margin:0;font-size:21px}.for-you-result-heading span{color:#999;font-size:11px}
+.for-you-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:20px 14px}
+.for-you-card{min-width:0;overflow:hidden;border:1px solid #292929;border-radius:12px;background:#111}
+.for-you-poster{position:relative;aspect-ratio:2/3;background:#1b1b1b;overflow:hidden}
+.for-you-poster img{width:100%;height:100%;object-fit:cover;display:block}
+.for-you-no-poster{height:100%;display:grid;place-items:center;color:#e47b83}
+.for-you-kind{position:absolute;left:8px;bottom:8px;display:flex;align-items:center;gap:5px;padding:5px 7px;border-radius:6px;background:#090909dc;color:#eee;font-size:9px;text-transform:uppercase}
+.for-you-card-info{padding:11px}
+.for-you-card-info h3{margin:0;color:#fff;font-size:13px;line-height:1.4;min-height:36px}
+.for-you-card-info p{margin:7px 0 11px;color:#888;font-size:10px}
+.for-you-card-info button{width:100%;min-height:35px;display:flex;align-items:center;justify-content:center;gap:6px;padding:7px;border:1px solid #633039;border-radius:7px;background:#281317;color:#f39aa1;font-size:10px;cursor:pointer}
+.for-you-card-info button:disabled{opacity:.55;cursor:default}
+.for-you-state{min-height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:30px;border:1px solid #292929;border-radius:15px;background:#111;text-align:center;color:#aaa}
+.for-you-state h2{margin:0;color:#fff;font-size:22px}.for-you-state p{max-width:480px;margin:0;font-size:12px;line-height:1.7}
+.for-you-cta{display:inline-flex;width:auto;margin-top:8px;text-decoration:none;padding:12px 18px}
+.for-you-footer{text-align:center;padding:25px;color:#666;font-size:9px;letter-spacing:1.5px}
+@media(max-width:1000px){.for-you-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:700px){.for-you-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:13px 9px}.for-you-content{width:92%;margin-top:24px}.for-you-heading{padding:20px;margin:25px 0}.for-you-icon{width:44px;height:44px;flex:0 0 auto}.for-you-card-info{padding:8px}.for-you-card-info h3{font-size:11px}.for-you-card-info button{font-size:9px}.for-you-top{padding:0 4%}}
+@media(max-width:390px){.for-you-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
