@@ -453,3 +453,6 @@ h1, h2, p { margin-top: 0; }
 .k-playback-form input,.k-playback-form select{width:100%;height:42px;padding:0 12px;border:1px solid #343434;border-radius:7px;background:#0b0b0b;color:#fff;font:inherit}
 .k-playback-form .k-admin-save{justify-self:start;grid-column:1/-1;margin-top:3px}
 @media(max-width:620px){.k-playback-form{grid-template-columns:1fr}.kryora-player-screen{min-height:250px}}
+
+.k-admin-sidebar-link{display:flex;align-items:center;gap:11px;padding:12px 13px;border:1px solid #3a2427;border-radius:7px;background:#1b1113;color:#e7b7bb;text-decoration:none;font-size:11px;font-weight:600}
+.k-admin-sidebar-link:hover{border-color:#8f343c;background:#241417}
