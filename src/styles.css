@@ -195,3 +195,264 @@ h1, h2, p { margin-top: 0; }
 .anime-note { padding:12px; border-radius:8px; background:rgba(139,112,255,.08); color:#B8A0A2; font-size:10px; line-height:1.6; }
 @media(max-width:1050px) { .poster-grid { grid-template-columns:repeat(4,minmax(0,1fr)); } .catalogue-rail,.search-results-section { padding-left:5%; padding-right:5%; } }
 @media(max-width:700px) { .poster-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px 10px; } .catalogue-rail,.search-results-section { padding:32px 5% 8px; } .catalogue-status,.catalogue-error,.empty-state { margin:22px 5%; } .detail-backdrop { padding:8px; }.detail-modal { max-height:94vh; }.detail-body { padding:22px 17px; }.detail-backdrop-image { height:150px; }.detail-body h2 { font-size:24px; }.episode-thumb { width:82px; height:50px; } }
+
+/* KRYORA account/auth screens */
+.profile-button { display:inline-flex; text-decoration:none; align-items:center; justify-content:center; }
+.kryora-auth { min-height:100vh; background:#090909; color:#fff; padding:30px 20px 24px; display:flex; flex-direction:column; align-items:center; font-family:Inter,'DM Sans',sans-serif; }
+.auth-brand { display:flex; align-items:center; gap:10px; color:#fff; text-decoration:none; font:700 20px 'Space Grotesk',sans-serif; letter-spacing:2px; margin:12px auto 42px; }
+.auth-mark { width:36px;height:36px;border-radius:10px;background:#c62835;display:grid;place-items:center;font-size:22px;font-weight:800; }
+.auth-card { width:min(100%,440px); border:1px solid #292929; border-radius:18px; background:#111; padding:clamp(22px,5vw,38px); box-shadow:0 24px 80px #0006; }
+.auth-eyebrow { color:#e34850;font-size:11px;font-weight:700;letter-spacing:2px; }
+.auth-card h1 { font:700 clamp(28px,5vw,36px) 'Space Grotesk',sans-serif; margin:10px 0; }
+.auth-sub { color:#aaa; line-height:1.6; margin:0 0 24px; }
+.auth-form { display:grid; gap:16px; margin-top:22px; }
+.auth-form label { display:grid; gap:8px; font-size:13px; color:#ddd; }
+.auth-form input,.auth-form textarea { width:100%; color:#fff; background:#191919; border:1px solid #333; border-radius:10px; padding:13px 14px; outline:none; font:inherit; }
+.auth-form input:focus,.auth-form textarea:focus { border-color:#c62835; box-shadow:0 0 0 2px #c6283525; }
+.auth-submit { border:0;border-radius:10px;background:#c62835;color:white;padding:14px;font-weight:700;cursor:pointer;margin-top:4px; }
+.auth-submit:disabled { opacity:.5;cursor:not-allowed; }
+.auth-forgot,.auth-logout { background:none;border:0;color:#ddd;text-decoration:underline;cursor:pointer;padding:12px 0; }
+.auth-switch { color:#aaa;font-size:14px;margin-top:22px; }
+.auth-switch button { border:0;background:none;color:#e34850;font-weight:700;cursor:pointer; }
+.auth-back { display:block;color:#aaa;text-decoration:none;margin-top:22px;font-size:13px; }
+.auth-message { border:1px solid #493235;background:#201719;border-radius:10px;color:#ddd;padding:12px;margin-top:16px;line-height:1.5;font-size:13px;overflow-wrap:anywhere; }
+.auth-message code { color:#ff9da3; }
+.auth-footer { margin-top:auto;padding-top:36px;color:#777;font-size:10px;letter-spacing:2px; }
+.account-card { margin-bottom:30px; }
+
+/* KRYORA persistent watchlist page */
+.watchlist-page{min-height:100vh;padding:32px 20px 24px;background:#090909;color:#fff}
+.watchlist-card{width:min(1080px,100%);margin:32px auto;padding:clamp(20px,4vw,40px);background:#111;border:1px solid #2b2b2b;border-radius:20px}
+.watchlist-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:28px}
+.watchlist-heading h1{font-size:clamp(32px,5vw,52px);margin:8px 0}
+.watchlist-count{white-space:nowrap;padding:9px 14px;background:#242424;border-radius:99px;color:#c8c8c8;font-size:13px}
+.watchlist-empty{min-height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;color:#aaa}
+.watchlist-empty h2{color:white;margin:4px 0;font-size:24px}
+.watchlist-empty p{margin:0;max-width:420px}
+.watchlist-discover{display:inline-flex;width:auto;text-decoration:none;padding:12px 22px;margin-top:8px}
+.watchlist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+.watchlist-item{display:flex;gap:12px;padding:12px;background:#171717;border:1px solid #2b2b2b;border-radius:14px;min-width:0}
+.watchlist-poster{width:100px;flex:0 0 100px;aspect-ratio:2/3;overflow:hidden;border-radius:8px;background:#242424}
+.watchlist-poster img{width:100%;height:100%;object-fit:cover}
+.watchlist-no-poster{height:100%;display:grid;place-items:center;color:#777}
+.watchlist-item-info{min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:7px}
+.watchlist-item-info h2{font-size:16px;line-height:1.3;margin:0;word-break:break-word}
+.watchlist-type{display:flex;align-items:center;gap:5px;color:#c64a55;font-size:11px;text-transform:uppercase;letter-spacing:.07em;margin:0}
+.watchlist-year{font-size:12px;color:#888;margin:0}
+.watchlist-remove{display:inline-flex;align-items:center;gap:6px;margin-top:auto;border:1px solid #3b3b3b;background:transparent;color:#bbb;border-radius:8px;padding:7px 9px;font-size:12px;cursor:pointer}
+.watchlist-remove:hover{border-color:#c62835;color:white}
+@media(max-width:600px){.watchlist-page{padding:18px 12px}.watchlist-card{margin:18px auto;padding:18px 14px}.watchlist-grid{grid-template-columns:1fr}.watchlist-item{max-width:100%}}
+
+.detail-watchlist-button{margin:14px 0 6px;display:inline-flex;align-items:center;gap:8px}
+.watchlist-inline-status{font-size:13px;color:#bdbdbd;margin:4px 0 14px}
+
+.history-progress{height:4px;background:#303030;border-radius:99px;overflow:hidden;width:100%;margin-top:5px}.history-progress span{display:block;height:100%;background:#c62835;border-radius:99px}
+
+.account-wide{max-width:620px;width:100%}
+.account-avatar-row{display:flex;align-items:center;gap:14px;margin:20px 0 24px;flex-wrap:wrap}
+.account-avatar{width:76px;height:76px;border-radius:50%;overflow:hidden;background:#242424;border:1px solid #383838;display:grid;place-items:center;font-size:28px;font-weight:700;color:#fff}
+.account-avatar img{width:100%;height:100%;object-fit:cover}
+.avatar-upload{display:inline-flex!important;flex-direction:row!important;align-items:center;gap:8px;background:#242424;border:1px solid #383838;padding:10px 13px;border-radius:9px;cursor:pointer;color:#fff!important;font-size:13px}
+.avatar-upload input{display:none}
+.account-avatar-row small,.account-wide .auth-form label small{color:#888;font-size:11px}
+.field-error{color:#ff777f!important}
+.account-settings{border-top:1px solid #2b2b2b;margin-top:28px;padding-top:22px;display:grid;gap:14px}
+.account-settings h2{display:flex;align-items:center;gap:9px;font-size:17px;margin:0 0 5px}
+.account-settings>label:not(.account-toggle){display:grid;gap:7px;color:#ddd;font-size:13px}
+.account-settings select{width:100%;background:#171717;border:1px solid #383838;color:#fff;border-radius:8px;padding:11px}
+.account-toggle{display:flex;align-items:center;gap:9px;font-size:13px;color:#ddd}
+.account-toggle input{accent-color:#c62835;width:16px;height:16px}
+.account-shortcuts{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0}
+.account-shortcuts a{display:inline-flex;align-items:center;gap:7px;padding:10px 12px;border:1px solid #333;border-radius:9px;color:#ddd;text-decoration:none;font-size:13px}
+.auth-submit{display:flex;align-items:center;justify-content:center;gap:8px}
+
+
+/* KRYORA account dashboard navigation */
+.account-dashboard{min-height:100vh;background:#090909;color:#f7f7f7;font-family:Inter,Manrope,Arial,sans-serif}
+.account-topbar{height:76px;padding:0 6%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #242424;background:#0c0c0c}
+.account-brand{display:flex;align-items:center;gap:11px;color:#fff;text-decoration:none;font-weight:800;letter-spacing:2px}
+.account-brand .auth-mark{width:34px;height:34px;font-size:20px}
+.account-back{display:inline-flex;align-items:center;gap:8px;color:#aaa;text-decoration:none;font-size:13px}
+.account-back:hover{color:#fff}
+.account-layout{width:min(1320px,92%);margin:38px auto 0;display:grid;grid-template-columns:250px minmax(0,1fr);gap:28px;align-items:start}
+.account-sidebar{position:sticky;top:22px;min-height:610px;padding:22px 14px;background:#111;border:1px solid #292929;border-radius:16px;display:flex;flex-direction:column}
+.account-sidebar-heading{padding:2px 10px 16px;color:#777;font-size:9px;font-weight:800;letter-spacing:2px}
+.account-mini-profile{display:flex;align-items:center;gap:11px;padding:13px 10px 20px;border-bottom:1px solid #292929}
+.account-mini-avatar{width:42px;height:42px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:#2b171a;border:1px solid #593036;color:#fff;font-weight:800}
+.account-mini-avatar img{width:100%;height:100%;object-fit:cover}
+.account-mini-profile strong,.account-mini-profile small{display:block;max-width:155px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.account-mini-profile strong{font-size:12px}.account-mini-profile small{margin-top:4px;color:#888;font-size:10px}
+.account-nav{display:grid;gap:5px;padding-top:18px}
+.account-nav button,.account-nav a{width:100%;min-height:43px;padding:0 11px;display:flex;align-items:center;gap:11px;border:0;border-radius:9px;background:transparent;color:#aaa;text-decoration:none;text-align:left;font:500 12px Inter,Arial,sans-serif;cursor:pointer}
+.account-nav button:hover,.account-nav a:hover{background:#1d1d1d;color:#fff}
+.account-nav button.active{background:#321619;color:#ff9299}
+.account-nav-count{margin-left:auto;color:#777;font-size:10px}
+.account-signout{margin-top:auto;padding:13px 10px;display:flex;align-items:center;gap:10px;border:0;border-top:1px solid #292929;background:none;color:#c5c5c5;text-align:left;font-size:12px;cursor:pointer}
+.account-signout:hover{color:#ff777f}
+.account-main{min-width:0}
+.account-page-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin:8px 0 25px}
+.account-page-heading .auth-eyebrow{margin:0 0 9px}
+.account-page-heading h1{margin:0;font-size:clamp(27px,4vw,38px);letter-spacing:-1.2px}
+.account-page-heading>div>p:last-child{margin:9px 0 0;color:#888;font-size:12px}
+.account-status{display:inline-flex;align-items:center;gap:7px;padding:8px 11px;border:1px solid #333;border-radius:30px;color:#aaa;font-size:9px;letter-spacing:1px}
+.account-status span{width:6px;height:6px;border-radius:50%;background:#55c88a;box-shadow:0 0 9px #55c88a}
+.account-panel,.account-welcome-panel{padding:clamp(20px,3vw,30px);background:#111;border:1px solid #292929;border-radius:16px}
+.account-welcome-panel{min-height:220px;display:flex;align-items:center;justify-content:space-between;gap:22px;overflow:hidden;background:radial-gradient(ellipse at 90% 20%,#421c21 0,transparent 48%),linear-gradient(115deg,#171112,#111)}
+.account-welcome-copy{max-width:510px}.account-welcome-label{color:#ed6973;font-size:9px;font-weight:800;letter-spacing:2px}
+.account-welcome-copy h2{margin:10px 0;font-size:clamp(25px,4vw,36px);letter-spacing:-1px}
+.account-welcome-copy p{max-width:420px;color:#aaa;font-size:12px;line-height:1.7}
+.account-welcome-copy button{margin-top:12px;padding:10px 13px;display:inline-flex;align-items:center;gap:8px;border:1px solid #6a3036;border-radius:8px;background:#35171b;color:#fff;font-size:11px;cursor:pointer}
+.account-welcome-avatar{width:104px;height:104px;flex:0 0 104px;border:3px solid #663139;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:#282828;color:#fff;font-size:40px;font-weight:800}
+.account-welcome-avatar img{width:100%;height:100%;object-fit:cover}
+.account-stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:15px}
+.account-stat-card{padding:19px;background:#111;border:1px solid #292929;border-radius:13px;color:#fff;text-decoration:none}
+.account-stat-card>span{width:34px;height:34px;display:grid;place-items:center;border-radius:9px;background:#321619;color:#f08089}
+.account-stat-card strong,.account-stat-card small,.account-stat-card em{display:block}
+.account-stat-card strong{margin-top:13px;font-size:27px}.account-stat-card small{margin-top:3px;color:#999;font-size:11px}
+.account-stat-card em{margin-top:13px;display:flex;align-items:center;gap:4px;color:#e77b83;font-size:10px;font-style:normal}
+.account-quick-grid{display:grid;gap:9px;margin-top:15px}
+.account-quick-grid button{width:100%;padding:16px;display:flex;align-items:center;gap:13px;text-align:left;border:1px solid #292929;border-radius:12px;background:#111;color:#d7d7d7;cursor:pointer}
+.account-quick-grid button>svg:first-child{color:#e47b83;flex:0 0 auto}
+.account-quick-grid button>svg:last-child{margin-left:auto;color:#777}
+.account-quick-grid b,.account-quick-grid small{display:block}.account-quick-grid b{font-size:12px}.account-quick-grid small{margin-top:5px;color:#888;font-size:10px}
+.account-panel-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.account-panel-title h2{margin:0;font-size:18px}.account-panel-title p{margin:6px 0 0;color:#888;font-size:11px}
+.account-form{max-width:650px}.account-form label{font-size:12px}
+.account-preference-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px;margin:10px 0 22px}
+.account-preference-grid label,.account-security-email{display:grid;gap:8px;color:#ddd;font-size:12px}
+.account-preference-grid select,.account-security-email input{width:100%;padding:12px;background:#191919;border:1px solid #383838;border-radius:9px;color:#fff}
+.account-toggle{display:flex;align-items:center;gap:10px;margin:17px 0;color:#ccc;font-size:12px}
+.account-toggle input{accent-color:#c62835;width:16px;height:16px}
+.account-save-settings{max-width:220px;margin-top:22px}
+.account-security-row{display:flex;align-items:center;gap:13px;padding:16px;border:1px solid #293a30;border-radius:11px;background:#121a15;margin-bottom:22px}
+.account-security-row>span{width:38px;height:38px;display:grid;place-items:center;border-radius:10px;background:#193022;color:#7bd49c}
+.account-security-row b,.account-security-row small{display:block}.account-security-row b{font-size:12px}.account-security-row small{margin-top:5px;color:#8e9a91;font-size:10px;line-height:1.5}
+.account-security-email{max-width:500px}.account-security-note{color:#888;font-size:11px;line-height:1.6}
+.account-recovery-link{display:inline-flex;align-items:center;gap:5px;color:#ed7e86;text-decoration:none;font-size:11px}
+.account-danger-button{display:flex;align-items:center;gap:8px;margin-top:30px;padding:11px 13px;border:1px solid #5a292e;border-radius:9px;background:#211315;color:#ff9aa1;font-size:11px;cursor:pointer}
+.account-feedback{margin:16px 0}.account-loading{padding:40px;color:#999}
+.account-main-footer{padding:30px 0 25px;color:#666;font-size:9px;letter-spacing:1.7px}
+@media(max-width:850px){.account-layout{grid-template-columns:1fr;margin-top:20px}.account-sidebar{position:static;min-height:0;padding:13px}.account-sidebar-heading{padding-bottom:10px}.account-mini-profile{padding:8px 8px 13px}.account-nav{display:flex;overflow-x:auto;padding:12px 0 2px;gap:5px}.account-nav button,.account-nav a{width:auto;min-width:max-content;min-height:39px;padding:0 11px}.account-nav-count{display:none}.account-signout{margin-top:8px;padding:11px 8px}.account-topbar{height:65px;padding:0 4%}.account-layout{width:92%}}
+@media(max-width:560px){.account-page-heading{align-items:flex-start}.account-status{font-size:8px}.account-welcome-panel{min-height:190px}.account-welcome-avatar{width:70px;height:70px;flex-basis:70px;font-size:28px}.account-stat-grid{gap:9px}.account-stat-card{padding:14px}.account-preference-grid{grid-template-columns:1fr}.account-back{font-size:11px}}
+
+
+/* KRYORA personalized discovery */
+.for-you-page{min-height:100vh;background:#090909;color:#f7f7f7}
+.for-you-top{height:72px;padding:0 6%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #292929;background:#0d0d0d}
+.for-you-brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:800;letter-spacing:2px}
+.for-you-brand span{width:34px;height:34px;border-radius:9px;background:#c62835;display:grid;place-items:center;font-size:20px}
+.for-you-account,.for-you-back{display:inline-flex;align-items:center;gap:8px;color:#aaa;text-decoration:none;font-size:12px}
+.for-you-content{width:min(1200px,90%);margin:38px auto 60px}
+.for-you-back:hover,.for-you-account:hover{color:#fff}
+.for-you-heading{display:flex;justify-content:space-between;align-items:center;margin:34px 0 30px;padding:30px;background:radial-gradient(ellipse at 90% 20%,#40191e 0,transparent 45%),#131313;border:1px solid #2b2b2b;border-radius:16px}
+.for-you-heading h1{margin:8px 0;font-size:clamp(34px,5vw,52px);letter-spacing:-1.5px}
+.for-you-heading p:last-child{margin:0;color:#aaa;font-size:13px}
+.for-you-icon{width:58px;height:58px;display:grid;place-items:center;border-radius:15px;background:#321619;color:#f08089}
+.for-you-result-heading{display:flex;justify-content:space-between;align-items:center;margin:28px 0 17px}
+.for-you-result-heading h2{margin:0;font-size:21px}.for-you-result-heading span{color:#999;font-size:11px}
+.for-you-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:20px 14px}
+.for-you-card{min-width:0;overflow:hidden;border:1px solid #292929;border-radius:12px;background:#111}
+.for-you-poster{position:relative;aspect-ratio:2/3;background:#1b1b1b;overflow:hidden}
+.for-you-poster img{width:100%;height:100%;object-fit:cover;display:block}
+.for-you-no-poster{height:100%;display:grid;place-items:center;color:#e47b83}
+.for-you-kind{position:absolute;left:8px;bottom:8px;display:flex;align-items:center;gap:5px;padding:5px 7px;border-radius:6px;background:#090909dc;color:#eee;font-size:9px;text-transform:uppercase}
+.for-you-card-info{padding:11px}
+.for-you-card-info h3{margin:0;color:#fff;font-size:13px;line-height:1.4;min-height:36px}
+.for-you-card-info p{margin:7px 0 11px;color:#888;font-size:10px}
+.for-you-card-info button{width:100%;min-height:35px;display:flex;align-items:center;justify-content:center;gap:6px;padding:7px;border:1px solid #633039;border-radius:7px;background:#281317;color:#f39aa1;font-size:10px;cursor:pointer}
+.for-you-card-info button:disabled{opacity:.55;cursor:default}
+.for-you-state{min-height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:30px;border:1px solid #292929;border-radius:15px;background:#111;text-align:center;color:#aaa}
+.for-you-state h2{margin:0;color:#fff;font-size:22px}.for-you-state p{max-width:480px;margin:0;font-size:12px;line-height:1.7}
+.for-you-cta{display:inline-flex;width:auto;margin-top:8px;text-decoration:none;padding:12px 18px}
+.for-you-footer{text-align:center;padding:25px;color:#666;font-size:9px;letter-spacing:1.5px}
+@media(max-width:1000px){.for-you-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:700px){.for-you-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:13px 9px}.for-you-content{width:92%;margin-top:24px}.for-you-heading{padding:20px;margin:25px 0}.for-you-icon{width:44px;height:44px;flex:0 0 auto}.for-you-card-info{padding:8px}.for-you-card-info h3{font-size:11px}.for-you-card-info button{font-size:9px}.for-you-top{padding:0 4%}}
+@media(max-width:390px){.for-you-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Advanced catalogue search */
+.advanced-search-page{min-height:100vh;background:radial-gradient(ellipse at 80% 0%,rgba(198,40,53,.12),transparent 38%),#090909;color:#fff}.advanced-search-top{height:72px;padding:0 7%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #292929;background:rgba(9,9,9,.88)}.advanced-brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.15em}.advanced-back{display:flex;align-items:center;gap:8px;color:#aaa;font-size:13px}.advanced-search-content{width:min(1160px,88%);margin:0 auto;padding:58px 0 80px}.advanced-search-content>h1{font-size:clamp(34px,5vw,56px);letter-spacing:-.045em;margin:10px 0}.advanced-intro{color:#aaa;max-width:650px;line-height:1.7;margin:0 0 28px}.advanced-searchbar{height:58px;border:1px solid #383838;background:#151515;border-radius:12px;display:flex;align-items:center;gap:14px;padding:0 18px;color:#999}.advanced-searchbar:focus-within{border-color:#c62835}.advanced-searchbar input{background:transparent;border:0;outline:0;color:white;flex:1;min-width:0;font-size:15px}.advanced-searchbar button{border:0;background:none;color:#aaa;display:grid;place-items:center}.advanced-toolbar{display:flex;align-items:center;justify-content:space-between;margin:30px 0 14px}.advanced-toolbar>div{display:flex;align-items:center;gap:10px}.advanced-toolbar strong{font-size:15px}.advanced-active-count{font-size:11px;color:#f08b91;background:#3a171b;padding:4px 8px;border-radius:20px}.advanced-clear{border:0;background:none;color:#e58a90;font-size:12px}.advanced-filter-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.advanced-field{display:grid;gap:8px;color:#aaa;font-size:12px}.advanced-field select{height:46px;background:#151515;border:1px solid #303030;border-radius:8px;color:#f5f5f5;padding:0 12px;min-width:0}.advanced-field select:focus{outline:1px solid #c62835}.advanced-mobile-filter,.advanced-mobile-panel{display:none}.advanced-results-heading{display:flex;align-items:end;justify-content:space-between;margin:44px 0 20px}.advanced-results-heading h2{font-size:22px;margin:0 0 6px}.advanced-results-heading p{font-size:12px;color:#999;margin:0}.advanced-source{font-size:10px;letter-spacing:.13em;color:#888}.advanced-results-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:24px 16px}.advanced-result-card{border:0;background:none;text-align:left;padding:0;min-width:0}.advanced-poster{position:relative;display:block;aspect-ratio:2/3;border-radius:9px;overflow:hidden;background:#191919;border:1px solid #282828}.advanced-poster img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .25s}.advanced-result-card:hover .advanced-poster img{transform:scale(1.045)}.advanced-poster-fallback{height:100%;display:grid;place-items:center;color:#777}.advanced-poster-fallback svg{width:34px;height:34px}.advanced-kind{position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,.78);padding:4px 7px;border-radius:4px;font-size:10px}.advanced-card-title{display:block;font-size:13px;font-weight:650;margin-top:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.advanced-card-meta{display:flex;align-items:center;gap:4px;color:#999;font-size:11px;margin-top:5px}.advanced-loading,.advanced-empty{padding:60px 20px;text-align:center;color:#aaa}.advanced-loading span{display:inline-block;width:18px;height:18px;border:2px solid #555;border-top-color:#c62835;border-radius:50%;vertical-align:middle;margin-right:9px;animation:advanced-spin .8s linear infinite}@keyframes advanced-spin{to{transform:rotate(360deg)}}.advanced-empty{display:grid;justify-items:center;gap:10px}.advanced-empty strong{color:#fff}.advanced-empty p{margin:0;font-size:13px}.advanced-empty button,.advanced-apply{background:#c62835;color:white;border:0;border-radius:7px;padding:11px 16px}.advanced-error{padding:14px;background:#291518;border:1px solid #642b32;border-radius:8px;color:#ffb5ba}.advanced-detail-overlay{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.82);display:grid;place-items:center;padding:18px}.advanced-detail{position:relative;width:min(650px,100%);max-height:90vh;overflow:auto;background:#141414;border:1px solid #333;border-radius:14px}.advanced-detail-close{position:absolute;right:12px;top:12px;z-index:2;border:0;border-radius:50%;width:36px;height:36px;background:#111;color:white}.advanced-detail-backdrop{width:100%;height:220px;object-fit:cover;display:block;mask-image:linear-gradient(#000 45%,transparent)}.advanced-detail-copy{padding:24px}.advanced-detail-copy h2{font-size:30px;margin:8px 0}.advanced-detail-copy>p:not(.auth-eyebrow){color:#bbb;line-height:1.7;font-size:14px}.advanced-detail-genres{display:flex;flex-wrap:wrap;gap:7px;margin:18px 0}.advanced-detail-genres span{font-size:11px;border:1px solid #383838;border-radius:20px;padding:5px 9px;color:#ccc}.advanced-detail-link{display:inline-flex;padding:11px 15px;border-radius:7px;background:#c62835;font-size:12px}.advanced-footer{text-align:center;border-top:1px solid #292929;padding:24px;color:#777;font-size:10px;letter-spacing:.14em}
+@media(max-width:900px){.advanced-results-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.advanced-search-content{width:90%}}
+@media(max-width:640px){.advanced-search-top{height:62px;padding:0 5%}.advanced-search-content{padding:38px 0 60px}.advanced-filter-grid{display:none}.advanced-toolbar{margin-top:22px}.advanced-mobile-filter{display:flex;align-items:center;gap:7px;background:#191919;border:1px solid #383838;color:#eee;border-radius:7px;padding:9px 12px;font-size:12px;margin-left:auto;margin-right:10px}.advanced-toolbar>div{margin-right:auto}.advanced-mobile-panel{display:grid;grid-template-columns:1fr 1fr;gap:12px;background:#141414;border:1px solid #303030;border-radius:10px;padding:14px}.advanced-mobile-panel .advanced-field{min-width:0}.advanced-apply{grid-column:1/-1}.advanced-results-heading{margin-top:34px}.advanced-results-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px 11px}.advanced-card-title{font-size:12px}.advanced-poster{border-radius:7px}.advanced-back{font-size:0}.advanced-back svg{width:20px;height:20px}.advanced-source{font-size:9px}.advanced-detail-backdrop{height:160px}}
+
+/* KRYORA secure administration */
+.k-admin{min-height:100vh;background:#090909;color:#f7f7f7}
+.k-admin-top{height:72px;padding:0 4.5%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #282828;background:#101010}
+.k-admin-brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:.14em;font-size:14px}
+.k-admin-brand>span:last-child{display:flex;flex-direction:column;gap:3px}
+.k-admin-brand small{font-size:7px;color:#d45a64;letter-spacing:.2em}
+.k-admin-top-actions{display:flex;align-items:center;gap:22px;color:#aaa;font-size:10px}
+.k-admin-top-actions span,.k-admin-top-actions a{display:flex;align-items:center;gap:7px}
+.k-admin-top-actions span{color:#e7a3a8;text-transform:capitalize}
+.k-admin-layout{width:min(1500px,100%);min-height:calc(100vh - 116px);margin:auto;display:grid;grid-template-columns:245px minmax(0,1fr)}
+.k-admin-sidebar{padding:30px 17px 20px;border-right:1px solid #242424;display:flex;flex-direction:column;gap:7px}
+.k-admin-section-label{padding:0 12px 13px;color:#707070;font-size:8px;font-weight:800;letter-spacing:.2em}
+.k-admin-sidebar>button{display:flex;align-items:center;gap:12px;width:100%;padding:13px 12px;border:1px solid transparent;border-radius:8px;background:transparent;text-align:left;color:#999;font-size:11px}
+.k-admin-sidebar>button.active,.k-admin-sidebar>button:hover{color:#fff;border-color:#51252a;background:rgba(198,40,53,.12)}
+.k-admin-sidebar>button.active svg{color:#ef7880}
+.k-admin-sidebar-bottom{margin-top:auto;padding:16px 5px 0;border-top:1px solid #292929;display:flex;align-items:center;gap:9px;min-width:0}
+.k-admin-sidebar-bottom>span:nth-child(2){display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}
+.k-admin-sidebar-bottom b{font-size:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.k-admin-sidebar-bottom small{font-size:8px;color:#777}
+.k-admin-sidebar-bottom>button{border:0;background:none;color:#999;padding:6px}
+.k-admin-avatar{width:29px;height:29px;display:grid;place-items:center;border-radius:50%;background:#54232a;color:white;font-size:12px;font-weight:800}
+.k-admin-main{padding:43px clamp(20px,4vw,60px) 65px;min-width:0}
+.k-admin-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:29px}
+.k-admin-heading h1{font-size:clamp(28px,3vw,39px);letter-spacing:-.05em;margin:0 0 8px}
+.k-admin-heading>div>p:last-child{color:#898989;font-size:11px;margin:0}
+.k-admin-secure{display:flex;align-items:center;gap:7px;padding:8px 10px;border:1px solid #244b39;border-radius:20px;color:#8cd5a7;font-size:9px;white-space:nowrap}
+.k-admin-stat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:19px}
+.k-admin-stat-grid article{padding:19px;border:1px solid #292929;border-radius:10px;background:linear-gradient(145deg,#171717,#101010);display:flex;flex-direction:column;align-items:flex-start}
+.k-admin-stat-grid article>span{width:34px;height:34px;display:grid;place-items:center;border-radius:8px;background:#3a191d;color:#f08a90;margin-bottom:18px}
+.k-admin-stat-grid article>span svg{width:17px}
+.k-admin-stat-grid small{color:#9b9b9b;font-size:10px}
+.k-admin-stat-grid strong{font-size:29px;letter-spacing:-.04em;margin:5px 0}
+.k-admin-stat-grid em{font-size:9px;color:#707070;font-style:normal}
+.k-admin-panel{padding:23px;border:1px solid #292929;border-radius:10px;background:#111}
+.k-admin-panel-head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:20px}
+.k-admin-panel-head h2{font-size:17px;margin:0 0 5px}
+.k-admin-panel-head p{font-size:10px;color:#858585;margin:0}
+.k-admin-status,.k-admin-count{font-size:9px;color:#8bd6a6;padding:7px 9px;border:1px solid #28533c;border-radius:20px;white-space:nowrap}
+.k-admin-health-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-top:1px solid #262626;font-size:10px;color:#c7c7c7;gap:10px}
+.k-admin-health-row>span{display:flex;align-items:center;gap:9px}
+.k-admin-health-row>b{font-size:9px;color:#8bd6a6}
+.k-admin-dot{width:7px;height:7px;border-radius:50%;background:#4fc27c;box-shadow:0 0 10px #4fc27c66}
+.k-admin-dot-warn{background:#d8a14e;box-shadow:0 0 10px #d8a14e66}
+.k-admin-note{font-size:9px;line-height:1.7;color:#777;margin:15px 0 0}
+.k-admin-search{height:42px;padding:0 12px;display:flex;align-items:center;gap:10px;border:1px solid #303030;border-radius:7px;color:#888;margin-bottom:14px}
+.k-admin-search input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:white;font-size:11px}
+.k-admin-table-wrap{overflow:auto}
+.k-admin-table-wrap table{width:100%;border-collapse:collapse;text-align:left;font-size:10px;min-width:440px}
+.k-admin-table-wrap th{padding:11px;color:#777;font-size:8px;letter-spacing:.13em;text-transform:uppercase;border-bottom:1px solid #303030}
+.k-admin-table-wrap td{padding:14px 11px;border-bottom:1px solid #252525;color:#c9c9c9}
+.k-admin-table-wrap td:first-child{font-weight:700;color:#eee}
+.k-admin-empty{padding:22px;text-align:center;color:#777;font-size:10px}
+.k-admin-provider{display:grid;grid-template-columns:150px 1fr auto;align-items:center;gap:12px;padding:16px 0;border-top:1px solid #292929;font-size:10px}
+.k-admin-provider b{color:#eee}.k-admin-provider span{color:#aaa}.k-admin-provider em{font-style:normal;color:#888;font-size:9px}
+.k-admin-settings{display:grid;gap:0}
+.k-admin-settings label{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:17px 0;border-top:1px solid #292929}
+.k-admin-settings label>span{display:flex;flex-direction:column;gap:5px}
+.k-admin-settings b{font-size:11px}.k-admin-settings small{font-size:9px;color:#888}
+.k-admin-settings input{accent-color:#c62835;width:17px;height:17px}
+.k-admin-save,.k-admin-refresh{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid #c62835;border-radius:7px;background:#c62835;color:white;padding:11px 15px;font-size:10px;font-weight:700}
+.k-admin-save{margin-top:21px}.k-admin-save:disabled{opacity:.55}
+.k-admin-refresh{background:transparent;border-color:#383838;color:#ccc;padding:8px 11px}
+.k-admin-alert,.k-admin-message{display:flex;align-items:center;gap:9px;padding:12px 14px;border:1px solid #654b28;border-radius:7px;background:#211b12;color:#e7c18a;font-size:10px;margin-bottom:15px;overflow-wrap:anywhere}
+.k-admin-message{border-color:#28533c;background:#102017;color:#9cddb2}
+.k-admin-footer{padding:20px 4.5%;border-top:1px solid #242424;color:#666;font-size:8px;letter-spacing:.16em;text-align:center}
+@media(max-width:800px){.k-admin-layout{grid-template-columns:1fr}.k-admin-sidebar{padding:12px 4%;border-right:0;border-bottom:1px solid #292929;display:flex;flex-direction:row;overflow:auto;gap:5px}.k-admin-section-label,.k-admin-sidebar-bottom{display:none}.k-admin-sidebar>button{width:auto;white-space:nowrap;padding:10px;font-size:9px}.k-admin-main{padding:29px 5% 45px}.k-admin-stat-grid{gap:8px}.k-admin-stat-grid article{padding:13px}.k-admin-stat-grid strong{font-size:23px}.k-admin-heading{align-items:flex-start;flex-direction:column}.k-admin-provider{grid-template-columns:1fr;gap:5px}.k-admin-top{padding:0 5%}.k-admin-top-actions{gap:10px}.k-admin-top-actions span{display:none}}
+@media(max-width:480px){.k-admin-stat-grid{grid-template-columns:1fr}.k-admin-stat-grid article{display:grid;grid-template-columns:36px 1fr;column-gap:11px;align-items:center}.k-admin-stat-grid article>span{grid-row:span 3;margin:0}.k-admin-stat-grid small,.k-admin-stat-grid strong,.k-admin-stat-grid em{grid-column:2}.k-admin-panel{padding:16px}.k-admin-panel-head{align-items:flex-start}.k-admin-secure{font-size:8px}.k-admin-top-actions a{font-size:0}.k-admin-top-actions a svg{width:18px;height:18px}}
+
+
+.kryora-player{width:100%;background:#050505;border:1px solid #292929;border-radius:12px;overflow:hidden}
+.kryora-player-screen{position:relative;display:grid;place-items:center;min-height:360px;aspect-ratio:16/9;background:radial-gradient(ellipse at center,#202020 0%,#090909 70%)}
+.kryora-player-state{max-width:440px;padding:30px;text-align:center;display:flex;align-items:center;flex-direction:column;gap:10px}
+.kryora-player-mark{width:54px;height:54px;display:grid;place-items:center;border:1px solid #8e2730;border-radius:14px;background:#2b1114;color:#fff;font:700 25px 'Space Grotesk',sans-serif}
+.kryora-player-state strong{font-size:18px;color:#fff}.kryora-player-state p{margin:0;color:#aaa;font-size:13px;line-height:1.6}.kryora-player-state small{color:#777;font-size:10px}
+.k-playback-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.k-playback-form label{display:grid;gap:7px;color:#aaa;font-size:11px}
+.k-playback-form input,.k-playback-form select{width:100%;height:42px;padding:0 12px;border:1px solid #343434;border-radius:7px;background:#0b0b0b;color:#fff;font:inherit}
+.k-playback-form .k-admin-save{justify-self:start;grid-column:1/-1;margin-top:3px}
+@media(max-width:620px){.k-playback-form{grid-template-columns:1fr}.kryora-player-screen{min-height:250px}}
+
+.k-admin-sidebar-link{display:flex;align-items:center;gap:11px;padding:12px 13px;border:1px solid #3a2427;border-radius:7px;background:#1b1113;color:#e7b7bb;text-decoration:none;font-size:11px;font-weight:600}
+.k-admin-sidebar-link:hover{border-color:#8f343c;background:#241417}

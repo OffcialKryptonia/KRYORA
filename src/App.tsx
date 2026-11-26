@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   ArrowRight, Bell, Bookmark, ChevronDown, Clapperboard, Compass,
-  Film, Menu, Play, Search, Sparkles, Tv, X, Star, CalendarDays, Clock,
+  Film, Heart, Menu, Play, Search, Sparkles, Tv, X, Star, CalendarDays, Clock, Clock3,
 } from "lucide-react";
 import type { FrameXTVPlaybackRequest } from "./lib/framextv";
 import {
@@ -11,6 +11,8 @@ import {
   type FrameXTVHome, type FrameXTVDetails, type FrameXTVEpisode,
 } from "./lib/framextv-catalogue";
 import type { CatalogueTitle } from "./lib/catalogue/types";
+import { supabase } from "./lib/supabase/client";
+import KryoraPlayer from "./components/playback/KryoraPlayer";
 
 type NavItem = "Home" | "Movies" | "Series" | "Anime";
 const navItems: NavItem[] = ["Home", "Movies", "Series", "Anime"];
@@ -34,9 +36,9 @@ function WatchPage({ request }: { request: FrameXTVPlaybackRequest }) {
   return <main className="watch-page">
     <header className="watch-header"><a className="brand" href="/"><span className="brand-mark">K</span><span className="brand-word">KRYORA</span></a><span className="watch-provider">KRYORA PLAYER</span></header>
     <div className="watch-content"><a className="watch-back" href="/">← Back to KRYORA</a>
-      <div className="watch-heading"><p className="section-overline">NOW PLAYING</p><h1>Continue your story</h1><p>{request.media === "movie" ? "Movie" : `Season ${request.season} · Episode ${request.episode}`} · TMDB ID {request.tmdbId}</p></div>
-      <div className="catalogue-error"><strong>Playback is not enabled yet</strong><p>KRYORA is currently using TMDB and AniList for discovery metadata. Video playback will be enabled only after an authorized streaming provider and content rights are configured.</p><a className="secondary-button" href="/">Return to discovery</a></div>
-      <p className="watch-disclaimer">Playback is provided by FrameXTV. Availability depends on the external player and its supported content.</p>
+      <div className="watch-heading"><p className="section-overline">KRYORA PLAYER</p><h1> {request.media === "movie" ? "Movie playback" : "Continue your story"}</h1><p>{request.media === "movie" ? "Movie" : `Season ${request.season} · Episode ${request.episode}`} · TMDB ID {request.tmdbId}</p></div>
+      <KryoraPlayer title={`TMDB title ${request.tmdbId}`} mediaType={request.media === "movie" ? "movie" : "tv"} catalogueProvider="tmdb" catalogueId={request.tmdbId} seasonNumber={request.season} episodeNumber={request.episode}/>
+      <p className="watch-disclaimer">KRYORA only plays video from authorised providers with verified distribution rights.</p>
     </div><footer className="watch-footer">KRYORA · A PRODUCT OF KRYPTONIA</footer>
   </main>;
 }
@@ -68,6 +70,8 @@ function App() {
   const [episodeLoading, setEpisodeLoading] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [watchRequest, setWatchRequest] = useState<FrameXTVPlaybackRequest | null>(playbackFromUrl);
+  const [watchlistStatus, setWatchlistStatus] = useState("");
+  const [watchlistBusy, setWatchlistBusy] = useState(false);
 
   useEffect(() => {
     getFrameXTVHome().then((data) => { setHome(data); if (data.providerStatus?.message) setProviderWarning(data.providerStatus.message); }).catch((e: unknown) => setError(e instanceof Error ? e.message : "Unable to load the catalogue.")).finally(() => setLoading(false));
@@ -101,7 +105,24 @@ function App() {
     return home.rails.filter((rail) => allowed.includes(rail.key));
   }, [home, activeNav]);
   const hero = home?.hero ?? home?.rails.find((r) => r.key === "trending_movies")?.items[0] ?? null;
-  const openTitle = (item: CatalogueTitle) => { setSelected(item); setDetailError(""); };
+  const openTitle = (item: CatalogueTitle) => { setSelected(item); setDetailError(""); setWatchlistStatus(""); };
+  const saveToWatchlist = async () => {
+    if (!selected || !supabase) { setWatchlistStatus("Please sign in to save titles."); return; }
+    setWatchlistBusy(true); setWatchlistStatus("");
+    try {
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError || !user) { setWatchlistStatus("Sign in to save this title."); window.location.assign("/auth?next=/watchlist"); return; }
+      const { data: list, error: listError } = await supabase.from("watchlists").select("id").eq("user_id", user.id).eq("is_default", true).maybeSingle();
+      if (listError) throw listError;
+      if (!list) throw new Error("Your watchlist is not ready. Please try again.");
+      const mediaType = selected.kind === "series" ? "tv" : selected.kind === "anime" ? "anime" : "movie";
+      const provider = selected.kind === "anime" ? "anilist" : "tmdb";
+      const { error: saveError } = await supabase.from("watchlist_items").insert({watchlist_id:list.id,user_id:user.id,media_type:mediaType,provider,external_id:selected.providerId,title:selected.title,poster_url:selected.posterUrl??null,release_year:selected.year??null});
+      if (saveError) { if (saveError.code === "23505") { setWatchlistStatus("Already saved in your watchlist."); return; } throw saveError; }
+      setWatchlistStatus("Saved to your watchlist.");
+    } catch (err) { setWatchlistStatus(err instanceof Error ? err.message : "Could not save this title."); }
+    finally { setWatchlistBusy(false); }
+  };
   const startWatch = (media: "movie" | "series", id: string, season?: number, episode?: number) => {
     const request: FrameXTVPlaybackRequest = { media, tmdbId: id, season, episode };
     setWatchRequest(request);
@@ -117,7 +138,7 @@ function App() {
     <header className="topbar">
       <a className="brand" href="/" onClick={(e) => { e.preventDefault(); setActiveNav("Home"); setSelected(null); }} aria-label="KRYORA home"><span className="brand-mark">K</span><span className="brand-word">KRYORA</span></a>
       <nav className="desktop-nav" aria-label="Main navigation">{navItems.map((item) => <button className={activeNav === item ? "nav-link active" : "nav-link"} key={item} onClick={() => setActiveNav(item)} type="button">{item}</button>)}<button className="nav-link explore-link" type="button" onClick={() => setActiveNav("Home")}>Explore <ChevronDown size={14}/></button></nav>
-      <div className="topbar-actions"><button className="icon-button" aria-label="Search" onClick={() => setSearchOpen((v) => !v)} type="button"><Search size={19}/></button><button className="icon-button notification-button" aria-label="Notifications" type="button"><Bell size={19}/></button><button className="profile-button" aria-label="Profile" type="button">K</button><button className="icon-button mobile-menu-trigger" aria-label="Menu" onClick={() => setMobileMenuOpen((v) => !v)} type="button">{mobileMenuOpen ? <X size={21}/> : <Menu size={21}/>}</button></div>
+      <div className="topbar-actions"><button className="icon-button" aria-label="Search" onClick={() => window.location.assign("/search")} type="button"><Search size={19}/></button><button className="icon-button notification-button" aria-label="Notifications" type="button"><Bell size={19}/></button><a className="profile-button" aria-label="Sign in or open profile" href="/auth">K</a><button className="icon-button mobile-menu-trigger" aria-label="Menu" onClick={() => setMobileMenuOpen((v) => !v)} type="button">{mobileMenuOpen ? <X size={21}/> : <Menu size={21}/>}</button></div>
     </header>
     {searchOpen && <section className="search-panel" aria-label="Catalogue search"><Search size={18}/><input autoFocus value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search movies, series, anime..." aria-label="Search titles"/>{searching && <span className="search-hint">Searching…</span>}<button className="icon-button" onClick={() => {setSearchOpen(false);setQuery("");setSearchResults(null);}} aria-label="Close search" type="button"><X size={18}/></button></section>}
     {mobileMenuOpen && <nav className="mobile-nav" aria-label="Mobile navigation">{navItems.map((item) => <button key={item} onClick={() => {setActiveNav(item);setMobileMenuOpen(false);}} type="button">{item}</button>)}</nav>}
@@ -141,18 +162,20 @@ function App() {
     <section className="discovery-section"><div className="section-heading"><div><p className="section-overline">BROWSE BY FORMAT</p><h2>Explore your universe</h2></div></div><div className="category-grid">
       <button className="category-card" onClick={() => setActiveNav("Movies")} type="button"><span className="category-icon"><Film size={22}/></span><span><strong>Movies</strong><small>Stories made for the big screen</small></span><ArrowRight className="category-arrow" size={17}/></button>
       <button className="category-card" onClick={() => setActiveNav("Series")} type="button"><span className="category-icon"><Tv size={22}/></span><span><strong>Series</strong><small>Worlds worth returning to</small></span><ArrowRight className="category-arrow" size={17}/></button>
-      <button className="category-card" onClick={() => setActiveNav("Anime")} type="button"><span className="category-icon"><Sparkles size={22}/></span><span><strong>Anime & animation</strong><small>Imagination without boundaries</small></span><ArrowRight className="category-arrow" size={17}/></button>
-      <button className="category-card" type="button"><span className="category-icon"><Bookmark size={22}/></span><span><strong>Your watchlist</strong><small>Watchlist feature coming soon</small></span><ArrowRight className="category-arrow" size={17}/></button>
+      <button className="category-card" onClick={() => setActiveNav("Anime")} type="button"><span className="category-icon"><Clapperboard size={22}/></span><span><strong>Anime & animation</strong><small>Imagination without boundaries</small></span><ArrowRight className="category-arrow" size={17}/></button>
+      <a className="category-card" href="/for-you"><span className="category-icon"><Heart size={22}/></span><span><strong>Made for you</strong><small>Recommendations shaped around your taste</small></span><ArrowRight className="category-arrow" size={17}/></a>
+      <button className="category-card" type="button" onClick={() => window.location.assign("/watchlist")}><span className="category-icon"><Bookmark size={22}/></span><span><strong>Your watchlist</strong><small>Saved movies, series and anime</small></span><ArrowRight className="category-arrow" size={17}/></button>
+      <button className="category-card" type="button" onClick={() => window.location.assign("/history")}><span className="category-icon"><Clock3 size={22}/></span><span><strong>Viewing history</strong><small>Pick up where your story left off</small></span><ArrowRight className="category-arrow" size={17}/></button>
     </div></section>
     <footer className="footer"><a className="brand footer-brand" href="/"><span className="brand-mark">K</span><span className="brand-word">KRYORA</span></a><span>Beyond Every Story.</span><span className="footer-credit">A PRODUCT OF <strong>KRYPTONIA</strong></span><span className="footer-copy">© {new Date().getFullYear()} KRYORA. All rights reserved.</span></footer>
     {selected && <div className="detail-backdrop" role="presentation" onClick={() => setSelected(null)}><section className="detail-modal" role="dialog" aria-modal="true" aria-label={selected.title} onClick={(e) => e.stopPropagation()}><button className="detail-close icon-button" onClick={() => setSelected(null)} aria-label="Close details" type="button"><X/></button>
       {details?.backdropUrl && <div className="detail-backdrop-image"><img src={details.backdropUrl} alt=""/></div>}
       <div className="detail-body"><p className="section-overline">{selected.kind.toUpperCase()} · KRYORA CATALOGUE</p><h2>{details?.title ?? selected.title}</h2>{detailLoading && <p className="search-hint">Loading title information…</p>}{detailError && <p className="detail-error">{detailError}</p>}
         <div className="detail-meta">{(details?.year ?? selected.year) && <span><CalendarDays size={14}/>{details?.year ?? selected.year}</span>}{(details?.averageRating ?? selected.averageRating) !== undefined && <span><Star size={14}/>{(details?.averageRating ?? selected.averageRating)?.toFixed(1)}</span>}{details?.runtimeMinutes && <span><Clock size={14}/>{details.runtimeMinutes} min</span>}{details?.episodeCount && <span><Tv size={14}/>{details.episodeCount} episodes</span>}</div>
-        <p className="detail-overview">{details?.synopsis ?? selected.synopsis ?? "No synopsis is available."}</p>
+        <p className="detail-overview">{details?.synopsis ?? selected.synopsis ?? "No synopsis is available."}</p>\n        <button className="secondary-button detail-watchlist-button" type="button" onClick={saveToWatchlist} disabled={watchlistBusy}>{watchlistBusy?"Saving…":"Save to Watchlist"} <Bookmark size={16}/></button>{watchlistStatus&&<p className="watchlist-inline-status" role="status">{watchlistStatus}</p>}
         <div className="genre-list">{(details?.genres ?? selected.genres).map((g) => <span key={g.id}>{g.name}</span>)}</div>
-        {selected.kind === "movie" && <button className="primary-button detail-watch" type="button" disabled aria-disabled="true"><Play size={16} fill="currentColor"/> Playback coming soon</button>}
-        {selected.kind === "series" && details && <div className="episode-panel"><div className="season-select-row"><h3>Episodes</h3><select value={seasonNumber} onChange={(e)=>setSeasonNumber(Number(e.target.value))} aria-label="Select season">{details.seasons.filter((s)=>s.number>0).map((s)=><option value={s.number} key={s.number}>{s.name || `Season ${s.number}`}</option>)}</select></div>{episodeLoading ? <p className="search-hint">Loading episodes…</p> : episodes.map((ep)=><div className="episode-row" key={ep.id || ep.number}><div className="episode-thumb">{ep.still && <img src={ep.still} alt=""/>}<span>{ep.number}</span></div><div className="episode-info"><strong>{ep.name || `Episode ${ep.number}`}</strong><p>{ep.overview || ep.airDate || ""}</p></div><button className="episode-play" disabled aria-label="Playback coming soon" type="button"><Play size={16} fill="currentColor"/></button></div>)}</div>}
+        {selected.kind === "movie" && <button className="primary-button detail-watch" type="button" onClick={() => startWatch("movie", selected.providerId)}><Play size={16} fill="currentColor"/> Open KRYORA Player</button>}
+        {selected.kind === "series" && details && <div className="episode-panel"><div className="season-select-row"><h3>Episodes</h3><select value={seasonNumber} onChange={(e)=>setSeasonNumber(Number(e.target.value))} aria-label="Select season">{details.seasons.filter((s)=>s.number>0).map((s)=><option value={s.number} key={s.number}>{s.name || `Season ${s.number}`}</option>)}</select></div>{episodeLoading ? <p className="search-hint">Loading episodes…</p> : episodes.map((ep)=><div className="episode-row" key={ep.id || ep.number}><div className="episode-thumb">{ep.still && <img src={ep.still} alt=""/>}<span>{ep.number}</span></div><div className="episode-info"><strong>{ep.name || `Episode ${ep.number}`}</strong><p>{ep.overview || ep.airDate || ""}</p></div><button className="episode-play" onClick={() => startWatch("series", selected.providerId, seasonNumber, ep.number)} aria-label={`Open episode ${ep.number} in KRYORA Player`} type="button"><Play size={16} fill="currentColor"/></button></div>)}</div>}
         {selected.kind === "anime" && <p className="anime-note">Anime information is loaded from the AniList metadata used by FrameXTV. The published FrameXTV embed documentation only specifies movie and TV-series playback, so KRYORA does not offer an unverified anime play action.</p>}
       </div></section></div>}
   </main>;
