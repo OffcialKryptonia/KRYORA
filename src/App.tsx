@@ -12,6 +12,7 @@ import {
 } from "./lib/framextv-catalogue";
 import type { CatalogueTitle } from "./lib/catalogue/types";
 import { supabase } from "./lib/supabase/client";
+import KryoraPlayer from "./components/playback/KryoraPlayer";
 
 type NavItem = "Home" | "Movies" | "Series" | "Anime";
 const navItems: NavItem[] = ["Home", "Movies", "Series", "Anime"];
@@ -35,9 +36,9 @@ function WatchPage({ request }: { request: FrameXTVPlaybackRequest }) {
   return <main className="watch-page">
     <header className="watch-header"><a className="brand" href="/"><span className="brand-mark">K</span><span className="brand-word">KRYORA</span></a><span className="watch-provider">KRYORA PLAYER</span></header>
     <div className="watch-content"><a className="watch-back" href="/">← Back to KRYORA</a>
-      <div className="watch-heading"><p className="section-overline">NOW PLAYING</p><h1>Continue your story</h1><p>{request.media === "movie" ? "Movie" : `Season ${request.season} · Episode ${request.episode}`} · TMDB ID {request.tmdbId}</p></div>
-      <div className="catalogue-error"><strong>Playback is not enabled yet</strong><p>KRYORA is currently using TMDB and AniList for discovery metadata. Video playback will be enabled only after an authorized streaming provider and content rights are configured.</p><a className="secondary-button" href="/">Return to discovery</a></div>
-      <p className="watch-disclaimer">Playback is provided by FrameXTV. Availability depends on the external player and its supported content.</p>
+      <div className="watch-heading"><p className="section-overline">KRYORA PLAYER</p><h1> {request.media === "movie" ? "Movie playback" : "Continue your story"}</h1><p>{request.media === "movie" ? "Movie" : `Season ${request.season} · Episode ${request.episode}`} · TMDB ID {request.tmdbId}</p></div>
+      <KryoraPlayer title={`TMDB title ${request.tmdbId}`} mediaType={request.media === "movie" ? "movie" : "tv"} catalogueProvider="tmdb" catalogueId={request.tmdbId} seasonNumber={request.season} episodeNumber={request.episode}/>
+      <p className="watch-disclaimer">KRYORA only plays video from authorised providers with verified distribution rights.</p>
     </div><footer className="watch-footer">KRYORA · A PRODUCT OF KRYPTONIA</footer>
   </main>;
 }
@@ -173,8 +174,8 @@ function App() {
         <div className="detail-meta">{(details?.year ?? selected.year) && <span><CalendarDays size={14}/>{details?.year ?? selected.year}</span>}{(details?.averageRating ?? selected.averageRating) !== undefined && <span><Star size={14}/>{(details?.averageRating ?? selected.averageRating)?.toFixed(1)}</span>}{details?.runtimeMinutes && <span><Clock size={14}/>{details.runtimeMinutes} min</span>}{details?.episodeCount && <span><Tv size={14}/>{details.episodeCount} episodes</span>}</div>
         <p className="detail-overview">{details?.synopsis ?? selected.synopsis ?? "No synopsis is available."}</p>\n        <button className="secondary-button detail-watchlist-button" type="button" onClick={saveToWatchlist} disabled={watchlistBusy}>{watchlistBusy?"Saving…":"Save to Watchlist"} <Bookmark size={16}/></button>{watchlistStatus&&<p className="watchlist-inline-status" role="status">{watchlistStatus}</p>}
         <div className="genre-list">{(details?.genres ?? selected.genres).map((g) => <span key={g.id}>{g.name}</span>)}</div>
-        {selected.kind === "movie" && <button className="primary-button detail-watch" type="button" disabled aria-disabled="true"><Play size={16} fill="currentColor"/> Playback coming soon</button>}
-        {selected.kind === "series" && details && <div className="episode-panel"><div className="season-select-row"><h3>Episodes</h3><select value={seasonNumber} onChange={(e)=>setSeasonNumber(Number(e.target.value))} aria-label="Select season">{details.seasons.filter((s)=>s.number>0).map((s)=><option value={s.number} key={s.number}>{s.name || `Season ${s.number}`}</option>)}</select></div>{episodeLoading ? <p className="search-hint">Loading episodes…</p> : episodes.map((ep)=><div className="episode-row" key={ep.id || ep.number}><div className="episode-thumb">{ep.still && <img src={ep.still} alt=""/>}<span>{ep.number}</span></div><div className="episode-info"><strong>{ep.name || `Episode ${ep.number}`}</strong><p>{ep.overview || ep.airDate || ""}</p></div><button className="episode-play" disabled aria-label="Playback coming soon" type="button"><Play size={16} fill="currentColor"/></button></div>)}</div>}
+        {selected.kind === "movie" && <button className="primary-button detail-watch" type="button" onClick={() => startWatch("movie", selected.providerId)}><Play size={16} fill="currentColor"/> Open KRYORA Player</button>}
+        {selected.kind === "series" && details && <div className="episode-panel"><div className="season-select-row"><h3>Episodes</h3><select value={seasonNumber} onChange={(e)=>setSeasonNumber(Number(e.target.value))} aria-label="Select season">{details.seasons.filter((s)=>s.number>0).map((s)=><option value={s.number} key={s.number}>{s.name || `Season ${s.number}`}</option>)}</select></div>{episodeLoading ? <p className="search-hint">Loading episodes…</p> : episodes.map((ep)=><div className="episode-row" key={ep.id || ep.number}><div className="episode-thumb">{ep.still && <img src={ep.still} alt=""/>}<span>{ep.number}</span></div><div className="episode-info"><strong>{ep.name || `Episode ${ep.number}`}</strong><p>{ep.overview || ep.airDate || ""}</p></div><button className="episode-play" onClick={() => startWatch("series", selected.providerId, seasonNumber, ep.number)} aria-label={`Open episode ${ep.number} in KRYORA Player`} type="button"><Play size={16} fill="currentColor"/></button></div>)}</div>}
         {selected.kind === "anime" && <p className="anime-note">Anime information is loaded from the AniList metadata used by FrameXTV. The published FrameXTV embed documentation only specifies movie and TV-series playback, so KRYORA does not offer an unverified anime play action.</p>}
       </div></section></div>}
   </main>;
