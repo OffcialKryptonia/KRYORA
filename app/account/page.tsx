@@ -118,6 +118,7 @@ export default function AccountPage() {
           </div>
           <nav className="account-nav" aria-label="Account navigation">
             {nav.map(({ id, label, icon: Icon }) => <button key={id} type="button" className={section === id ? "active" : ""} onClick={() => { setSection(id); setMessage(""); }}><Icon size={17}/>{label}</button>)}
+            <Link href="/for-you"><Compass size={17}/> For you</Link>
             <Link href="/watchlist"><Bookmark size={17}/> Watchlist <span className="account-nav-count">{watchlistCount ?? "—"}</span></Link>
             <Link href="/history"><History size={17}/> Viewing history <span className="account-nav-count">{historyCount ?? "—"}</span></Link>
             <button type="button" className={section === "security" ? "active" : ""} onClick={() => { setSection("security"); setMessage(""); }}><ShieldCheck size={17}/> Security</button>
