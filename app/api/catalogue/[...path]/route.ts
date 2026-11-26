@@ -92,17 +92,18 @@ export async function GET(request:Request,context:{params:Promise<{path:string[]
    };
    const anilistDiscover=async()=>{
     const variables:Record<string,unknown>={page,perPage:50};
-    const searchFilter=query?"search: $search, ":"";
-    if(query)variables.search=query;
-    const queryText="query ($page:Int,$perPage:Int"+(query?",$search:String":"")+") { Page(page:$page,perPage:$perPage) { media(type: ANIME, isAdult: false, "+searchFilter+"sort: POPULARITY_DESC) { id title { english romaji native } coverImage { extraLarge large } bannerImage description episodes genres averageScore seasonYear } } }";
+    const definitions=["$page:Int","$perPage:Int"];
+    const filters=["type:ANIME","isAdult:false"];
+    if(query){definitions.push("$search:String");variables.search=query;filters.push("search:$search");}
+    if(year){definitions.push("$year:Int");variables.year=Number(year);filters.push("seasonYear:$year");}
+    const animeGenres:Record<string,string[]>={Action:["Action"],Adventure:["Adventure"],Comedy:["Comedy"],Drama:["Drama"],Fantasy:["Fantasy"],Horror:["Horror"],Mystery:["Mystery"],Romance:["Romance"],"Science Fiction":["Sci-Fi"],Thriller:["Thriller"],Sports:["Sports"],"Action & Adventure":["Action","Adventure"],"Sci-Fi & Fantasy":["Sci-Fi","Fantasy"],Kids:["Kids"]};
+    const selectedGenres=animeGenres[genre];
+    if(selectedGenres){definitions.push("$genres:[String]");variables.genres=selectedGenres;filters.push("genre_in:$genres");}
+    const animeSort:Record<string,string>={popularity:"POPULARITY_DESC",rating:"SCORE_DESC",newest:"START_DATE_DESC",alphabetical:"TITLE_ROMAJI"};
+    const sortValue=animeSort[sort]||animeSort.popularity;
+    const queryText=`query (${definitions.join(",")}) { Page(page:$page,perPage:$perPage) { media(${filters.join(",")},sort:[${sortValue}]) { id title { english romaji native } coverImage { extraLarge large } bannerImage description episodes genres averageScore seasonYear } } }`;
     const data=await anilist(queryText,variables);
-    let items=(data.Page?.media||[]).map(mapAnime);
-    if(year)items=items.filter((item:any)=>String(item.year||"")===year);
-    items=items.filter(animeGenreMatches);
-    if(sort==="rating")items.sort((a:any,b:any)=>(b.averageRating||0)-(a.averageRating||0));
-    if(sort==="newest")items.sort((a:any,b:any)=>(b.year||0)-(a.year||0));
-    if(sort==="alphabetical")items.sort((a:any,b:any)=>a.title.localeCompare(b.title));
-    return items;
+    return (data.Page?.media||[]).map(mapAnime);
    };
    const tasks:Promise<any[]>[]=[];
    if(kind==="all"||kind==="movie")tasks.push(tmdbDiscover("movie").catch((e)=>{providerErrors.tmdb=e instanceof Error?e.message:"TMDB discovery failed.";return [];}));
