@@ -245,3 +245,5 @@ h1, h2, p { margin-top: 0; }
 
 .detail-watchlist-button{margin:14px 0 6px;display:inline-flex;align-items:center;gap:8px}
 .watchlist-inline-status{font-size:13px;color:#bdbdbd;margin:4px 0 14px}
+
+.history-progress{height:4px;background:#303030;border-radius:99px;overflow:hidden;width:100%;margin-top:5px}.history-progress span{display:block;height:100%;background:#c62835;border-radius:99px}
