@@ -69,11 +69,10 @@ export async function GET(request:Request,context:{params:Promise<{path:string[]
    const query=(url.searchParams.get("q")||"").trim();
    const page=Math.max(1,Math.min(50,Number(url.searchParams.get("page")||"1")||1));
    if(!["all","movie","series","anime"].includes(kind))return NextResponse.json({error:"Invalid content type."},{status:400});
-   if(year && !/^\d{4}$/.test(year))return NextResponse.json({error:"Invalid release year."},{status:400});
+   if(year && !/^\\d{4}$/.test(year))return NextResponse.json({error:"Invalid release year."},{status:400});
    const genreIds:Record<string,string>={Action:"28",Adventure:"12",Animation:"16",Comedy:"35",Crime:"80",Documentary:"99",Drama:"18",Family:"10751",Fantasy:"14",History:"36",Horror:"27",Music:"10402",Mystery:"9648",Romance:"10749","Science Fiction":"878",Thriller:"53",War:"10752",Western:"37","Action & Adventure":"10759",Kids:"10762","Sci-Fi & Fantasy":"10765",Sports:""};
    const tmdbSort:Record<string,string>={popularity:"popularity.desc",rating:"vote_average.desc",newest:"primary_release_date.desc",alphabetical:"original_title.asc"};
-   const animeSort:Record<string,string>={popularity:"POPULARITY_DESC",rating:"SCORE_DESC",newest:"START_DATE_DESC",alphabetical:"TITLE_ROMAJI"};
-   const tasks:Promise<any[]>[]=[];
+   const providerErrors:Record<string,string>={};
    const tmdbDiscover=async(media:"movie"|"tv")=>{
     const p=new URLSearchParams({page:String(page),sort_by:tmdbSort[sort]||tmdbSort.popularity,"vote_count.gte":"10"});
     if(year)p.set(media==="movie"?"primary_release_year":"first_air_date_year",year);
@@ -82,27 +81,45 @@ export async function GET(request:Request,context:{params:Promise<{path:string[]
     const data=await tmdb(path);
     return (data.results||[]).map((x:Raw)=>mapTmdb(x,media==="tv"?"series":"movie"));
    };
-   const anilistDiscover=async()=>{
-    const variables:any={page,perPage:30,sort:[animeSort[sort]||"POPULARITY_DESC"],isAdult:false};
-    let filters="type: ANIME, isAdult: false";
-    if(query){filters+=", search: $search";variables.search=query;}
-    if(year){filters+=", seasonYear: $year";variables.year=Number(year);}
-    if(genre){filters+=", genre_in: $genres";variables.genres=[genre];}
-    const queryText="query ($page:Int,$perPage:Int,$search:String,$year:Int,$genres:[String],$sort:[MediaSort]) { Page(page:$page,perPage:$perPage) { media("+filters+", sort:$sort) { id title { english romaji native } coverImage { extraLarge large } bannerImage description episodes genres averageScore seasonYear } } }";
-    const data=await anilist(queryText,variables);
-    return (data.Page?.media||[]).map(mapAnime);
+   const animeGenreMatches=(item:any)=>{
+    if(!genre)return true;
+    const names=(item.genres||[]).map((g:any)=>g.name);
+    if(genre==="Animation")return true;
+    if(genre==="Science Fiction")return names.includes("Sci-Fi");
+    if(genre==="Action & Adventure")return names.includes("Action")||names.includes("Adventure");
+    if(genre==="Sci-Fi & Fantasy")return names.includes("Sci-Fi")||names.includes("Fantasy");
+    return names.includes(genre);
    };
-   if(kind==="all"||kind==="movie")tasks.push(tmdbDiscover("movie").catch(()=>[]));
-   if(kind==="all"||kind==="series")tasks.push(tmdbDiscover("tv").catch(()=>[]));
-   if(kind==="all"||kind==="anime")tasks.push(anilistDiscover().catch(()=>[]));
+   const anilistDiscover=async()=>{
+    const variables:Record<string,unknown>={page,perPage:50};
+    const searchFilter=query?"search: $search, ":"";
+    if(query)variables.search=query;
+    const queryText="query ($page:Int,$perPage:Int"+(query?",$search:String":"")+") { Page(page:$page,perPage:$perPage) { media(type: ANIME, isAdult: false, "+searchFilter+"sort: POPULARITY_DESC) { id title { english romaji native } coverImage { extraLarge large } bannerImage description episodes genres averageScore seasonYear } } }";
+    const data=await anilist(queryText,variables);
+    let items=(data.Page?.media||[]).map(mapAnime);
+    if(year)items=items.filter((item:any)=>String(item.year||"")===year);
+    items=items.filter(animeGenreMatches);
+    if(sort==="rating")items.sort((a:any,b:any)=>(b.averageRating||0)-(a.averageRating||0));
+    if(sort==="newest")items.sort((a:any,b:any)=>(b.year||0)-(a.year||0));
+    if(sort==="alphabetical")items.sort((a:any,b:any)=>a.title.localeCompare(b.title));
+    return items;
+   };
+   const tasks:Promise<any[]>[]=[];
+   if(kind==="all"||kind==="movie")tasks.push(tmdbDiscover("movie").catch((e)=>{providerErrors.tmdb=e instanceof Error?e.message:"TMDB discovery failed.";return [];}));
+   if(kind==="all"||kind==="series")tasks.push(tmdbDiscover("tv").catch((e)=>{providerErrors.tmdb=e instanceof Error?e.message:"TMDB discovery failed.";return [];}));
+   if(kind==="all"||kind==="anime")tasks.push(anilistDiscover().catch((e)=>{providerErrors.anilist=e instanceof Error?e.message:"AniList discovery failed.";return [];}));
    const groups=await Promise.all(tasks);
    let results=groups.flat();
    if(year)results=results.filter((item:any)=>String(item.year||"")===year);
-   if(genre)results=results.filter((item:any)=>(item.genres||[]).some((g:any)=>g.name===genre));
+   if(genre)results=results.filter((item:any)=>{
+    if(item.provider==="anilist")return animeGenreMatches(item);
+    return (item.genres||[]).some((g:any)=>g.name===genre);
+   });
    if(sort==="rating")results.sort((a,b)=>(b.averageRating||0)-(a.averageRating||0));
    if(sort==="newest")results.sort((a,b)=>(b.year||0)-(a.year||0));
    if(sort==="alphabetical")results.sort((a,b)=>a.title.localeCompare(b.title));
-   return NextResponse.json({results,page,filters:{kind,genre,year,sort}},{headers:{"Cache-Control":"public, s-maxage=120, stale-while-revalidate=300"}});
+   if(kind==="anime"&&providerErrors.anilist)return NextResponse.json({error:"AniList discovery failed: "+providerErrors.anilist,results:[],providerErrors},{status:502});
+   return NextResponse.json({results,page,filters:{kind,genre,year,sort},providerErrors},{headers:{"Cache-Control":"public, s-maxage=120, stale-while-revalidate=300"}});
   }
   if(endpoint==="season"){
    const id=url.searchParams.get("id")||"", season=url.searchParams.get("season")||"";
