@@ -11,6 +11,7 @@ import {
   type FrameXTVHome, type FrameXTVDetails, type FrameXTVEpisode,
 } from "./lib/framextv-catalogue";
 import type { CatalogueTitle } from "./lib/catalogue/types";
+import { supabase } from "./lib/supabase/client";
 
 type NavItem = "Home" | "Movies" | "Series" | "Anime";
 const navItems: NavItem[] = ["Home", "Movies", "Series", "Anime"];
@@ -68,6 +69,8 @@ function App() {
   const [episodeLoading, setEpisodeLoading] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [watchRequest, setWatchRequest] = useState<FrameXTVPlaybackRequest | null>(playbackFromUrl);
+  const [watchlistStatus, setWatchlistStatus] = useState("");
+  const [watchlistBusy, setWatchlistBusy] = useState(false);
 
   useEffect(() => {
     getFrameXTVHome().then((data) => { setHome(data); if (data.providerStatus?.message) setProviderWarning(data.providerStatus.message); }).catch((e: unknown) => setError(e instanceof Error ? e.message : "Unable to load the catalogue.")).finally(() => setLoading(false));
@@ -101,7 +104,24 @@ function App() {
     return home.rails.filter((rail) => allowed.includes(rail.key));
   }, [home, activeNav]);
   const hero = home?.hero ?? home?.rails.find((r) => r.key === "trending_movies")?.items[0] ?? null;
-  const openTitle = (item: CatalogueTitle) => { setSelected(item); setDetailError(""); };
+  const openTitle = (item: CatalogueTitle) => { setSelected(item); setDetailError(""); setWatchlistStatus(""); };
+  const saveToWatchlist = async () => {
+    if (!selected || !supabase) { setWatchlistStatus("Please sign in to save titles."); return; }
+    setWatchlistBusy(true); setWatchlistStatus("");
+    try {
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError || !user) { setWatchlistStatus("Sign in to save this title."); window.location.assign("/auth?next=/watchlist"); return; }
+      const { data: list, error: listError } = await supabase.from("watchlists").select("id").eq("user_id", user.id).eq("is_default", true).maybeSingle();
+      if (listError) throw listError;
+      if (!list) throw new Error("Your watchlist is not ready. Please try again.");
+      const mediaType = selected.kind === "series" ? "tv" : selected.kind === "anime" ? "anime" : "movie";
+      const provider = selected.kind === "anime" ? "anilist" : "tmdb";
+      const { error: saveError } = await supabase.from("watchlist_items").insert({watchlist_id:list.id,user_id:user.id,media_type:mediaType,provider,external_id:selected.providerId,title:selected.title,poster_url:selected.posterUrl??null,release_year:selected.year??null});
+      if (saveError) { if (saveError.code === "23505") { setWatchlistStatus("Already saved in your watchlist."); return; } throw saveError; }
+      setWatchlistStatus("Saved to your watchlist.");
+    } catch (err) { setWatchlistStatus(err instanceof Error ? err.message : "Could not save this title."); }
+    finally { setWatchlistBusy(false); }
+  };
   const startWatch = (media: "movie" | "series", id: string, season?: number, episode?: number) => {
     const request: FrameXTVPlaybackRequest = { media, tmdbId: id, season, episode };
     setWatchRequest(request);
@@ -149,7 +169,7 @@ function App() {
       {details?.backdropUrl && <div className="detail-backdrop-image"><img src={details.backdropUrl} alt=""/></div>}
       <div className="detail-body"><p className="section-overline">{selected.kind.toUpperCase()} · KRYORA CATALOGUE</p><h2>{details?.title ?? selected.title}</h2>{detailLoading && <p className="search-hint">Loading title information…</p>}{detailError && <p className="detail-error">{detailError}</p>}
         <div className="detail-meta">{(details?.year ?? selected.year) && <span><CalendarDays size={14}/>{details?.year ?? selected.year}</span>}{(details?.averageRating ?? selected.averageRating) !== undefined && <span><Star size={14}/>{(details?.averageRating ?? selected.averageRating)?.toFixed(1)}</span>}{details?.runtimeMinutes && <span><Clock size={14}/>{details.runtimeMinutes} min</span>}{details?.episodeCount && <span><Tv size={14}/>{details.episodeCount} episodes</span>}</div>
-        <p className="detail-overview">{details?.synopsis ?? selected.synopsis ?? "No synopsis is available."}</p>
+        <p className="detail-overview">{details?.synopsis ?? selected.synopsis ?? "No synopsis is available."}</p>\n        <button className="secondary-button detail-watchlist-button" type="button" onClick={saveToWatchlist} disabled={watchlistBusy}>{watchlistBusy?"Saving…":"Save to Watchlist"} <Bookmark size={16}/></button>{watchlistStatus&&<p className="watchlist-inline-status" role="status">{watchlistStatus}</p>}
         <div className="genre-list">{(details?.genres ?? selected.genres).map((g) => <span key={g.id}>{g.name}</span>)}</div>
         {selected.kind === "movie" && <button className="primary-button detail-watch" type="button" disabled aria-disabled="true"><Play size={16} fill="currentColor"/> Playback coming soon</button>}
         {selected.kind === "series" && details && <div className="episode-panel"><div className="season-select-row"><h3>Episodes</h3><select value={seasonNumber} onChange={(e)=>setSeasonNumber(Number(e.target.value))} aria-label="Select season">{details.seasons.filter((s)=>s.number>0).map((s)=><option value={s.number} key={s.number}>{s.name || `Season ${s.number}`}</option>)}</select></div>{episodeLoading ? <p className="search-hint">Loading episodes…</p> : episodes.map((ep)=><div className="episode-row" key={ep.id || ep.number}><div className="episode-thumb">{ep.still && <img src={ep.still} alt=""/>}<span>{ep.number}</span></div><div className="episode-info"><strong>{ep.name || `Episode ${ep.number}`}</strong><p>{ep.overview || ep.airDate || ""}</p></div><button className="episode-play" disabled aria-label="Playback coming soon" type="button"><Play size={16} fill="currentColor"/></button></div>)}</div>}
