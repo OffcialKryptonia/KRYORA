@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   ArrowRight, Bell, Bookmark, ChevronDown, Clapperboard, Compass,
-  Film, Menu, Play, Search, Sparkles, Tv, X, Star, CalendarDays, Clock, Clock3,
+  Film, Menu, Play, Search, Sparkles, Tv, X, Star, CalendarDays, Clock, Clock3, PanelsTopLeft,
 } from "lucide-react";
 import type { FrameXTVPlaybackRequest } from "./lib/framextv";
 import {
@@ -161,8 +161,8 @@ function App() {
     <section className="discovery-section"><div className="section-heading"><div><p className="section-overline">BROWSE BY FORMAT</p><h2>Explore your universe</h2></div></div><div className="category-grid">
       <button className="category-card" onClick={() => setActiveNav("Movies")} type="button"><span className="category-icon"><Film size={22}/></span><span><strong>Movies</strong><small>Stories made for the big screen</small></span><ArrowRight className="category-arrow" size={17}/></button>
       <button className="category-card" onClick={() => setActiveNav("Series")} type="button"><span className="category-icon"><Tv size={22}/></span><span><strong>Series</strong><small>Worlds worth returning to</small></span><ArrowRight className="category-arrow" size={17}/></button>
-      <button className="category-card" onClick={() => setActiveNav("Anime")} type="button"><span className="category-icon"><Sparkles size={22}/></span><span><strong>Anime & animation</strong><small>Imagination without boundaries</small></span><ArrowRight className="category-arrow" size={17}/></button>
-      <a className="category-card" href="/for-you"><span className="category-icon"><Sparkles size={22}/></span><span><strong>Made for you</strong><small>Recommendations shaped around your taste</small></span><ArrowRight className="category-arrow" size={17}/></a>
+      <button className="category-card" onClick={() => setActiveNav("Anime")} type="button"><span className="category-icon"><PanelsTopLeft size={22}/></span><span><strong>Anime & animation</strong><small>Imagination without boundaries</small></span><ArrowRight className="category-arrow" size={17}/></button>
+      <a className="category-card" href="/for-you"><span className="category-icon"><Compass size={22}/></span><span><strong>Made for you</strong><small>Recommendations shaped around your taste</small></span><ArrowRight className="category-arrow" size={17}/></a>
       <button className="category-card" type="button" onClick={() => window.location.assign("/watchlist")}><span className="category-icon"><Bookmark size={22}/></span><span><strong>Your watchlist</strong><small>Saved movies, series and anime</small></span><ArrowRight className="category-arrow" size={17}/></button>
       <button className="category-card" type="button" onClick={() => window.location.assign("/history")}><span className="category-icon"><Clock3 size={22}/></span><span><strong>Viewing history</strong><small>Pick up where your story left off</small></span><ArrowRight className="category-arrow" size={17}/></button>
     </div></section>
