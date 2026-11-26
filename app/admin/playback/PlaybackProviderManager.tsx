@@ -51,6 +51,10 @@ export default function PlaybackProviderManager({ role }: { role: string }) {
       <div className="k-admin-heading"><div><p className="auth-eyebrow">PLAYBACK INFRASTRUCTURE</p><h1>Provider registry</h1><p>Register authorised playback partners and track integration readiness.</p></div><span className="k-admin-secure">Protected session</span></div>
       <div className="k-admin-alert">Providers are registered disabled by default. KRYORA will not issue or expose a video URL until a verified provider adapter performs a secure, server-side resolution.</div>
       {message && <div className="k-admin-message" role="status">{message}</div>}
+      <div className="k-admin-panel" style={{ marginBottom: 18 }}>
+        <div className="k-admin-panel-head"><div><h2>MovieBox connection</h2><p>Secure configuration check. Secrets are never displayed.</p></div><button className="k-admin-refresh" onClick={() => void load()}>Check again</button></div>
+        {movieBoxMessage ? <p className="k-admin-message" role="status">{movieBoxMessage}</p> : movieBox && <><p>{movieBox.endpointConfigured ? (movieBox.endpointValid ? "HTTPS endpoint configured" : "Endpoint URL is invalid — HTTPS is required") : "Partner API endpoint not configured"}</p><p>{movieBox.credentialConfigured ? "Partner credential configured" : "Partner credential not configured"}</p><p><b>{movieBox.readyForPartnerConnection ? "Configuration ready for adapter connection" : "Waiting for partner API configuration"}</b></p><p className="k-admin-empty">{movieBox.note}</p></>}
+      </div>
       <div className="k-admin-panel">
         <div className="k-admin-panel-head"><div><h2>Register a provider</h2><p>Use the adapter identifier that will be implemented against the provider’s official API.</p></div></div>
         <form onSubmit={register} className="k-playback-form">
