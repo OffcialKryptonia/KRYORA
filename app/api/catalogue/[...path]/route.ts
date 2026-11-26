@@ -97,6 +97,8 @@ export async function GET(request:Request,context:{params:Promise<{path:string[]
    if(kind==="all"||kind==="anime")tasks.push(anilistDiscover().catch(()=>[]));
    const groups=await Promise.all(tasks);
    let results=groups.flat();
+   if(year)results=results.filter((item:any)=>String(item.year||"")===year);
+   if(genre)results=results.filter((item:any)=>(item.genres||[]).some((g:any)=>g.name===genre));
    if(sort==="rating")results.sort((a,b)=>(b.averageRating||0)-(a.averageRating||0));
    if(sort==="newest")results.sort((a,b)=>(b.year||0)-(a.year||0));
    if(sort==="alphabetical")results.sort((a,b)=>a.title.localeCompare(b.title));
