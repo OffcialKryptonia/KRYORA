@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   ArrowRight, Bell, Bookmark, ChevronDown, Clapperboard, Compass,
-  Film, Menu, Play, Search, Sparkles, Tv, X, Star, CalendarDays, Clock,
+  Film, Menu, Play, Search, Sparkles, Tv, X, Star, CalendarDays, Clock, Clock3,
 } from "lucide-react";
 import type { FrameXTVPlaybackRequest } from "./lib/framextv";
 import {
