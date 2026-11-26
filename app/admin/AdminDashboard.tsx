@@ -77,6 +77,7 @@ export default function AdminDashboard({ email, role, stats, initialUsers, initi
       <aside className="k-admin-sidebar">
         <div className="k-admin-section-label">MANAGEMENT</div>
         {nav.map(({ id, label, icon: Icon }) => <button key={id} className={tab === id ? "active" : ""} onClick={() => { setTab(id); if (id === "audit") void loadAudit(); }} type="button"><Icon size={17}/>{label}</button>)}
+        <Link href="/admin/playback" className="k-admin-sidebar-link"><Film size={17}/> Playback providers</Link>
         <div className="k-admin-sidebar-bottom"><span className="k-admin-avatar">{(email[0] || "A").toUpperCase()}</span><span><b>{email}</b><small>Administrator</small></span><button onClick={signOut} aria-label="Sign out" type="button"><LogOut size={16}/></button></div>
       </aside>
       <section className="k-admin-main">
