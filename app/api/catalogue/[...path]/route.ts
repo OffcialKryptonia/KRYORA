@@ -69,7 +69,7 @@ export async function GET(request:Request,context:{params:Promise<{path:string[]
    const query=(url.searchParams.get("q")||"").trim();
    const page=Math.max(1,Math.min(50,Number(url.searchParams.get("page")||"1")||1));
    if(!["all","movie","series","anime"].includes(kind))return NextResponse.json({error:"Invalid content type."},{status:400});
-   if(year && !/^\\d{4}$/.test(year))return NextResponse.json({error:"Invalid release year."},{status:400});
+   if(year && !/^\d{4}$/.test(year))return NextResponse.json({error:"Invalid release year."},{status:400});
    const genreIds:Record<string,string>={Action:"28",Adventure:"12",Animation:"16",Comedy:"35",Crime:"80",Documentary:"99",Drama:"18",Family:"10751",Fantasy:"14",History:"36",Horror:"27",Music:"10402",Mystery:"9648",Romance:"10749","Science Fiction":"878",Thriller:"53",War:"10752",Western:"37","Action & Adventure":"10759",Kids:"10762","Sci-Fi & Fantasy":"10765",Sports:""};
    const tmdbSort:Record<string,string>={popularity:"popularity.desc",rating:"vote_average.desc",newest:"primary_release_date.desc",alphabetical:"original_title.asc"};
    const providerErrors:Record<string,string>={};
