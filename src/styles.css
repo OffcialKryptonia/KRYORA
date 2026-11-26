@@ -441,3 +441,15 @@ h1, h2, p { margin-top: 0; }
 .k-admin-footer{padding:20px 4.5%;border-top:1px solid #242424;color:#666;font-size:8px;letter-spacing:.16em;text-align:center}
 @media(max-width:800px){.k-admin-layout{grid-template-columns:1fr}.k-admin-sidebar{padding:12px 4%;border-right:0;border-bottom:1px solid #292929;display:flex;flex-direction:row;overflow:auto;gap:5px}.k-admin-section-label,.k-admin-sidebar-bottom{display:none}.k-admin-sidebar>button{width:auto;white-space:nowrap;padding:10px;font-size:9px}.k-admin-main{padding:29px 5% 45px}.k-admin-stat-grid{gap:8px}.k-admin-stat-grid article{padding:13px}.k-admin-stat-grid strong{font-size:23px}.k-admin-heading{align-items:flex-start;flex-direction:column}.k-admin-provider{grid-template-columns:1fr;gap:5px}.k-admin-top{padding:0 5%}.k-admin-top-actions{gap:10px}.k-admin-top-actions span{display:none}}
 @media(max-width:480px){.k-admin-stat-grid{grid-template-columns:1fr}.k-admin-stat-grid article{display:grid;grid-template-columns:36px 1fr;column-gap:11px;align-items:center}.k-admin-stat-grid article>span{grid-row:span 3;margin:0}.k-admin-stat-grid small,.k-admin-stat-grid strong,.k-admin-stat-grid em{grid-column:2}.k-admin-panel{padding:16px}.k-admin-panel-head{align-items:flex-start}.k-admin-secure{font-size:8px}.k-admin-top-actions a{font-size:0}.k-admin-top-actions a svg{width:18px;height:18px}}
+
+
+.kryora-player{width:100%;background:#050505;border:1px solid #292929;border-radius:12px;overflow:hidden}
+.kryora-player-screen{position:relative;display:grid;place-items:center;min-height:360px;aspect-ratio:16/9;background:radial-gradient(ellipse at center,#202020 0%,#090909 70%)}
+.kryora-player-state{max-width:440px;padding:30px;text-align:center;display:flex;align-items:center;flex-direction:column;gap:10px}
+.kryora-player-mark{width:54px;height:54px;display:grid;place-items:center;border:1px solid #8e2730;border-radius:14px;background:#2b1114;color:#fff;font:700 25px 'Space Grotesk',sans-serif}
+.kryora-player-state strong{font-size:18px;color:#fff}.kryora-player-state p{margin:0;color:#aaa;font-size:13px;line-height:1.6}.kryora-player-state small{color:#777;font-size:10px}
+.k-playback-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.k-playback-form label{display:grid;gap:7px;color:#aaa;font-size:11px}
+.k-playback-form input,.k-playback-form select{width:100%;height:42px;padding:0 12px;border:1px solid #343434;border-radius:7px;background:#0b0b0b;color:#fff;font:inherit}
+.k-playback-form .k-admin-save{justify-self:start;grid-column:1/-1;margin-top:3px}
+@media(max-width:620px){.k-playback-form{grid-template-columns:1fr}.kryora-player-screen{min-height:250px}}
