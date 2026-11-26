@@ -4,7 +4,7 @@ import { useEffect, useState, type FormEvent, type ChangeEvent } from "react";
 import Link from "next/link";
 import { supabase, supabaseConfigured } from "../../src/lib/supabase/client";
 import {
-  ArrowLeft, LayoutDashboard, UserRound, SlidersHorizontal, Bookmark,
+  ArrowLeft, LayoutDashboard, UserRound, SlidersHorizontal, Bookmark, Compass,
   History, ShieldCheck, LogOut, Camera, Save, ChevronRight, Settings2,
 } from "lucide-react";
 
