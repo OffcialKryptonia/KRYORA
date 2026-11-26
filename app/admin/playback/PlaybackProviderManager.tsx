@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
+type MovieBoxStatus = { endpointConfigured: boolean; endpointValid: boolean; credentialConfigured: boolean; readyForPartnerConnection: boolean; adapterConnected: boolean; playbackEnabled: boolean; note: string };
+
 type Provider = {
   id: string; provider_key: string; display_name: string; adapter_key: string;
   enabled: boolean; priority: number; supported_protocols: string[]; capabilities: Record<string, boolean>;
@@ -16,12 +18,18 @@ export default function PlaybackProviderManager({ role }: { role: string }) {
   const [protocol, setProtocol] = useState("hls");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("Loading provider registry…");
+  const [movieBox, setMovieBox] = useState<MovieBoxStatus | null>(null);
+  const [movieBoxMessage, setMovieBoxMessage] = useState("Checking MovieBox configuration…");
 
   async function load() {
     const response = await fetch("/api/admin/playback/providers", { cache: "no-store" });
     const data = await response.json();
     if (!response.ok) { setMessage(data.error || "Could not load providers."); return; }
     setProviders(data.providers ?? []); setMessage("");
+    const statusResponse = await fetch("/api/admin/playback/providers/moviebox/status", { cache: "no-store" });
+    const statusData = await statusResponse.json();
+    if (statusResponse.ok) { setMovieBox(statusData); setMovieBoxMessage(""); }
+    else setMovieBoxMessage(statusData.error || "Could not check MovieBox configuration.");
   }
   useEffect(() => { void load(); }, []);
 
